@@ -3,6 +3,25 @@ include './imports.php';
 header("Content-Type: text/html; charset=UTF-8");
 
 $searchValue = '';
+$availableColours = [
+    ['value' => 'red', 'article' => 'h3354'],
+    ['value' => 'green', 'article' => 'h3324'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'red', 'article' => 'h3354'],
+    ['value' => 'green', 'article' => 'h3324'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'red', 'article' => 'h3354'],
+    ['value' => 'green', 'article' => 'h3324'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'blue', 'article' => 'h4354'],
+];
 
 if (isset($_REQUEST['isSearch']) && ($_REQUEST['isSearch'] == 'Y')) {
     $searchValue = $_REQUEST['search'];
@@ -75,10 +94,19 @@ include './templates/header.php'; ?>
                     </div>
                 </div>
             </form>
-            <form class="float-right" style="margin-top: -40px" action="" method="get">
+            <form class="float-right" style="margin-top: -37px;" action="" method="get">
                 <div>
                     <button type="submit" class="btn btn-primary" name="newMerchType" value="create">
                         Додати вид товару
+                    </button>
+                </div>
+                <div class="float-right" style="margin-top: 8px;">
+                    <button class="btn btn-secondary"
+                            type="submit"
+                            name="newMerchUnderType"
+                            value='submit'
+                    >
+                        Додати товар
                     </button>
                 </div>
             </form>
@@ -86,38 +114,43 @@ include './templates/header.php'; ?>
             <br />
             <form action="" method="get">
                 <?php
-                foreach ($positions as $position) {
-                    if (isset($_GET['newMerchType'])) {
-                        unset($_GET); ?>
-                        <div class="content-header">
-                            <h2>
-                                <input class="text-align-center" name="newMerchTypeName">
-                            </h2>
-                        </div>
-                        <div class="dropdown float-right" style="margin-top:-25px;">
-                            <button class="btn btn-secondary dropdown-toggle"
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
-                                Опції
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button type="submit" class="dropdown-item" name="newMerchTypeSave" value="Submit">
-                                    Зберегти
-                                </button>
-                                <button class="dropdown-item" name="newMerchTypeCancel" value="Submit">
-                                    Відмінити
-                                </button>
-                            </div>
-                        </div>
-                        <div class="space-between-lots">
-                            <div class="separator"></div>
-                        </div>
-                    <?php
-                    }
+                if (isset($_GET['newMerchUnderType'])) {
+                    unset($_GET); ?>
 
+                <?php
+                include './addingMerchUnderType.php';
+                }
+                if (isset($_GET['newMerchType'])) {
+                    unset($_GET); ?>
+                    <div class="content-header">
+                        <h2>
+                            <input class="text-align-center" name="newMerchTypeName">
+                        </h2>
+                    </div>
+                    <div class="dropdown float-right" style="margin-top:-25px;">
+                        <button class="btn btn-secondary dropdown-toggle"
+                                type="button"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                            Опції
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button type="submit" class="dropdown-item" name="newMerchTypeSave" value="Submit">
+                                Зберегти
+                            </button>
+                            <button class="dropdown-item" name="newMerchTypeCancel" value="Submit">
+                                Відмінити
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-between-lots">
+                        <div class="separator"></div>
+                    </div>
+                <?php
+                }
+                foreach ($positions as $position) {
                     if ($_GET['MerchTypeEdit'] === $position['id']) {?>
                         <div class="content-header">
                             <h2>
@@ -158,10 +191,6 @@ include './templates/header.php'; ?>
                                 </h2>
                             </div>
                             <div class="dropdown float-right" style="margin-top:-25px;">
-                                <button class="btn btn-secondary"
-                                        type="button">
-                                    Додати товар
-                                </button>
                                 <button class="btn btn-secondary dropdown-toggle"
                                         type="button" id="dropdownMenuButton"
                                         data-toggle="dropdown"
