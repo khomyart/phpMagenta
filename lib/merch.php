@@ -62,7 +62,17 @@ function createUnit($type, $params)
         $query = 'INSERT INTO `merch_types`(`merch_type_name`) VALUES (:merchTypeName);';
     }
 
-    performQuery($query, $params);
+    if($type === 'merchUnderType') {
+        $query = 'INSERT INTO `merch_under_types`(`merch_type_id`, `merch_under_type_name`, `img`, `description`, `price`) 
+                        VALUES (:merchTypeId, :merchUnderTypeName, :img, :description, :price);';
+    }
+
+    if($type === 'colour') {
+        $query = 'INSERT INTO `colour_pack`(`merch_under_type_id`, `color`, `article`) 
+                        VALUES (:merchUnderTypeId, :color, :article);';
+    }
+
+    return performQuery($query, $params) ? true : false;
 }
 
 function updateUnit($type, $params) {
@@ -70,7 +80,7 @@ function updateUnit($type, $params) {
         $query = 'UPDATE `merch_types` SET `merch_type_name` = :merchTypeName WHERE `id` = :id;';
     }
 
-    performQuery($query, $params);
+    return performQuery($query, $params) ? true : false;
 }
 
 function removeUnit($type, $params) {
@@ -78,7 +88,7 @@ function removeUnit($type, $params) {
         $query = 'DELETE from `merch_types` WHERE `id` = :id;';
     }
 
-    performQuery($query, $params);
+    return performQuery($query, $params) ? true : false;
 }
 
 /**
