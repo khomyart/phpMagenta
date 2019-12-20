@@ -4,9 +4,9 @@ include './lib/db.php';
 include './lib/users.php';
 include './lib/merch.php';
 
-/*ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);*/
+error_reporting(E_ALL);
 
 initSession();
 $isIndex = basename($_SERVER['SCRIPT_FILENAME']) == 'control.php';

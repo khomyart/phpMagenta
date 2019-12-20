@@ -7,27 +7,29 @@ $availableColours = [
     ['value' => 'red', 'article' => 'h3354'],
     ['value' => 'green', 'article' => 'h3324'],
     ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'red', 'article' => 'h3354'],
-    ['value' => 'green', 'article' => 'h3324'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'red', 'article' => 'h3354'],
-    ['value' => 'green', 'article' => 'h3324'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
-    ['value' => 'blue', 'article' => 'h4354'],
+    ['value' => 'AliceBlue', 'article' => 'h4354'],
+    ['value' => 'AntiqueWhite', 'article' => 'h4354'],
+    ['value' => 'Aqua', 'article' => 'h4354'],
+    ['value' => 'Aquamarine', 'article' => 'h4354'],
+    ['value' => 'Azure', 'article' => 'h3354'],
+    ['value' => 'Beige', 'article' => 'h3324'],
+    ['value' => 'Bisque', 'article' => 'h4354'],
+    ['value' => 'Black', 'article' => 'h4354'],
+    ['value' => 'BlanchedAlmond', 'article' => 'h4354'],
+    ['value' => 'Blue', 'article' => 'h3354'],
+    ['value' => 'BlueViolet', 'article' => 'h3324'],
+    ['value' => 'Brown', 'article' => 'h4354'],
+    ['value' => 'BurlyWood', 'article' => 'h4354'],
+    ['value' => 'CadetBlue', 'article' => 'h4354'],
 ];
+
+var_dump($_GET);
 
 if (isset($_REQUEST['isSearch']) && ($_REQUEST['isSearch'] == 'Y')) {
     $searchValue = $_REQUEST['search'];
 }
 
-if (isset($_GET['newMerchTypeCancel'])) {
+if (isset($_GET['cancel'])) {
     header('Location: merch.php');
 }
 
@@ -54,6 +56,33 @@ if (isset($_GET['MerchTypeDelete'])) {
     ];
 
     removeUnit('merchType', $params);
+}
+
+if (isset($_GET['newMerchUnderTypeSave'])) {
+    $params = [
+        'merchTypeId' => $_GET['newMerchUnderType']['listOfTypes'],
+        'merchUnderTypeName' => $_GET['newMerchUnderType']['header'],
+        'img' => $_GET['newMerchUnderType']['img'],
+        'description' => nl2br($_GET['newMerchUnderType']['desc']),
+        'price' => $_GET['newMerchUnderType']['price'],
+    ];
+
+    createUnit('merchUnderType', $params);
+
+    $lastAddedMerchUnderTypeQuery = 'SELECT id FROM `merch_under_types` ORDER BY id DESC LIMIT 1';
+    $lastAddedMerchUnderTypeId = getRow($lastAddedMerchUnderTypeQuery, []);
+
+   foreach ($_GET['newMerchUnderTypeColours'] as $colour) {
+        $addColourParams = [
+            'merchUnderTypeId' => $lastAddedMerchUnderTypeId['id'],
+            'color' => $colour,
+            'article' => key($_GET['newMerchUnderTypeColours']),
+        ];
+
+        createUnit('colour', $addColourParams);
+        next($_GET['newMerchUnderTypeColours']);
+    }
+   // header('Location: merch.php');
 }
 
 $positions = getListOfMerchTypes($searchValue);
@@ -116,9 +145,134 @@ include './templates/header.php'; ?>
                 <?php
                 if (isset($_GET['newMerchUnderType'])) {
                     unset($_GET); ?>
-
+                    <!--MerchUnderTypeCreate-->
+                    <div class="full-length-back position-relative" style="margin-top: 30px;">
+                        <div class="dropdown position-absolute"
+                             style="margin-top:-25px; top:40px; right: 15px;">
+                            <button class="btn btn-info dropdown-toggle"
+                                    type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    style="height: 40px;"
+                            >
+                                Опції
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <button class="dropdown-item" name="newMerchUnderTypeSave"
+                                        value="Submit">
+                                    Зберегти
+                                </button>
+                                <button class="dropdown-item" name="cancel"
+                                        value="Submit">
+                                    Відмінити
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-top:40px;">
+                            <select class="form-control" name="newMerchUnderType[listOfTypes]">
+                                <option value="">
+                                    Вид товару
+                                </option>
+                                <?php
+                                foreach ($positions as $position) { ?>
+                                    <option value="<?= $position['id'] ?>">
+                                        <?= $position['merch_type_name'] ?>
+                                    </option>
+                                    <?php
+                                } ?>
+                            </select>
+                        </div>
+                        <div class="info-container">
+                            <div class="info-container-img d-flex flex-column justify-content-center align-items-center">
+                                <label>Посилання на зображення</label>
+                                <input class="form-control" name="newMerchUnderType[img]" style="width: 100%;">
+                            </div>
+                            <div class="info-container-text">
+                                <div class="info-container-text-header d-flex flex-column justify-content-center align-items-center">
+                                    <label>Заголовок</label>
+                                    <h2>
+                                        <input class="form-control" style="width: 350px;" name="newMerchUnderType[header]">
+                                    </h2>
+                                </div>
+                                <div class="info-container-text-desc d-flex flex-column justify-content-center align-items-center">
+                                    <label>Опис</label>
+                                    <textarea class=" d-inline-block form-control" name="newMerchUnderType[desc]"
+                                              style="height: 160px; width: 350px;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="color-block-holder">
+                            <?php
+                            $i=0;
+                            foreach ($availableColours as $availableColour) {?>
+                                <div style="margin: 0px 15px 15px 15px;">
+                                    <input class="form-check-input" type="checkbox" id="<?=$i?>"
+                                           name="newMerchUnderTypeColours[<?=$availableColour['article']?>]"
+                                           value="<?=$availableColour['value']?>">
+                                    <label class="form-check-label" for="<?=$i?>"> <?=$availableColour['value']?>, <?=$availableColour['article']?>
+                                        <div style="width: 20px;
+                                                height: 20px;
+                                                background-color: <?=$availableColour['value']?>;
+                                                float: right;
+                                                margin-left: 5px;"
+                                        >
+                                        </div>
+                                    </label>
+                                </div>
+                            <?php
+                                $i += 1;
+                            } ?>
+                        </div>
+                        <div class="size-table-div">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr >
+                                    <th scope="col"></th>
+                                    <th scope="col">S</th>
+                                    <th scope="col">M</th>
+                                    <th scope="col">L</th>
+                                    <th scope="col">XL</th>
+                                    <th scope="col">XXL</th>
+                                    <th scope="col">3XL</th>
+                                    <th scope="col">4XL</th>
+                                    <th scope="col">5XL</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">a (см)</th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[s_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[m_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[l_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[xl_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[xxl_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[3xl_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[4xl_a]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[5xl_a]"></th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">b (см)</th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[s_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[m_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[l_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[xl_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[xxl_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[3xl_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[4xl_b]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[5xl_b]"></th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="position-price">
+                            <h2>
+                                Ціна: <input class="form-control " type="number" name="newMerchUnderType[price]"> грн
+                            </h2>
+                        </div>
+                    </div>
+                    <!--MerchUnderTypeCreate close-->
                 <?php
-                include './addingMerchUnderType.php';
                 }
                 if (isset($_GET['newMerchType'])) {
                     unset($_GET); ?>
@@ -140,7 +294,7 @@ include './templates/header.php'; ?>
                             <button type="submit" class="dropdown-item" name="newMerchTypeSave" value="Submit">
                                 Зберегти
                             </button>
-                            <button class="dropdown-item" name="newMerchTypeCancel" value="Submit">
+                            <button class="dropdown-item" name="cancel" value="Submit">
                                 Відмінити
                             </button>
                         </div>
@@ -174,7 +328,7 @@ include './templates/header.php'; ?>
                                         value="<?= $position['id'] ?>">
                                     Зберегти
                                 </button>
-                                <button class="dropdown-item" name="newMerchTypeCancel" value="Submit">
+                                <button class="dropdown-item" name="cancel" value="Submit">
                                     Відмінити
                                 </button>
                             </div>
@@ -252,7 +406,7 @@ include './templates/header.php'; ?>
                                         </div>
                                         <div class="color-block-holder">
                                             <?php foreach ($colourPacks as $colour) {
-                                                if ($underPosition['id'] === $colour['merch_under_types_id']) { ?>
+                                                if ($underPosition['id'] === $colour['merch_under_type_id']) { ?>
                                                     <div class="color-block"
                                                          style="background-color: <?= $colour['color'] ?>;">
                                                         <div class="color-block-text">
