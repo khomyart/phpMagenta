@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Returns list\array of contacts
+ * Getting list of merch types, like men, woman clothes
  *
- * @param $filter
+ * @param string $filter
  * @return array
  */
 function getListOfMerchTypes($filter = '')
@@ -18,6 +18,12 @@ function getListOfMerchTypes($filter = '')
     return getAllRows($query, $params);
 }
 
+/**
+ * Getting list of merch unertypes, like types of men or woman clothes
+ *
+ * @param string $filter
+ * @return array
+ */
 function getListOfMerchUnderTypes($filter = '')
 {
     $query = 'SELECT * FROM `merch_under_types` WHERE 1';
@@ -30,6 +36,12 @@ function getListOfMerchUnderTypes($filter = '')
     return getAllRows($query, $params);
 }
 
+/**
+ * Colors which are related to merch undertype
+ *
+ * @param string $filter
+ * @return array
+ */
 function getListOfColourPack($filter = '')
 {
     $query = 'SELECT * FROM `colour_pack` WHERE 1';
@@ -42,6 +54,10 @@ function getListOfColourPack($filter = '')
     return getAllRows($query, $params);
 }
 
+/**
+ * @param string $filter
+ * @return array
+ */
 function getListOfAvailableSizes($filter = '')
 {
     $query = 'SELECT * FROM `available_sizes` WHERE 1';
@@ -72,6 +88,11 @@ function createUnit($type, $params)
                         VALUES (:merchUnderTypeId, :color, :article);';
     }
 
+    if($type === 'size') {
+        $query = 'INSERT INTO `available_sizes`(`merch_under_type_id`, `S_a`, `S_b`, `M_a`, `M_b`, `L_a`, `L_b`, `XL_a`, `XL_b`, `XXL_a`, `XXL_b`, `3XL_a`, `3XL_b`, `4XL_a`, `4XL_b`, `5XL_a`, `5XL_b`) 
+        VALUES (:merch_under_type_id, :S_a, :S_b, :M_a, :M_b, :L_a, :L_b, :XL_a, :XL_b, :XXL_a, :XXL_b, :3XL_a, :3XL_b, :4XL_a, :4XL_b, :5XL_a, :5XL_b)';
+    }
+
     return performQuery($query, $params) ? true : false;
 }
 
@@ -86,6 +107,10 @@ function updateUnit($type, $params) {
 function removeUnit($type, $params) {
     if($type === 'merchType') {
         $query = 'DELETE from `merch_types` WHERE `id` = :id;';
+    }
+
+    if($type === 'merchUnderType') {
+        $query = 'DELETE from `merch_under_types` WHERE `id` = :id;';
     }
 
     return performQuery($query, $params) ? true : false;

@@ -4,26 +4,25 @@ header("Content-Type: text/html; charset=UTF-8");
 
 $searchValue = '';
 $availableColours = [
-    ['value' => 'red', 'article' => 'h33541'],
-    ['value' => 'green', 'article' => 'h33242'],
-    ['value' => 'blue', 'article' => 'h43543'],
-    ['value' => 'AliceBlue', 'article' => 'h43544'],
-    ['value' => 'AntiqueWhite', 'article' => 'h43545'],
-    ['value' => 'Aqua', 'article' => 'h43546'],
-    ['value' => 'Aquamarine', 'article' => 'h43547'],
-    ['value' => 'Azure', 'article' => 'h33548'],
-    ['value' => 'Beige', 'article' => 'h33249'],
-    ['value' => 'Bisque', 'article' => 'h43540'],
-    ['value' => 'Black', 'article' => 'h435411'],
-    ['value' => 'BlanchedAlmond', 'article' => 'h435412'],
-    ['value' => 'Blue', 'article' => 'h335413'],
-    ['value' => 'BlueViolet', 'article' => 'h332414'],
-    ['value' => 'Brown', 'article' => 'h435415'],
-    ['value' => 'BurlyWood', 'article' => 'h435416'],
-    ['value' => 'CadetBlue', 'article' => 'h435417'],
+    ['value' => 'red', 'article' => 'h41', 'describe' => 'Красноватенький', 'textColor' => 'white'],
+    ['value' => 'green', 'article' => 'h42', 'describe' => 'Зеленуватенький', 'textColor' => 'white'],
+    ['value' => 'AliceBlue', 'article' => 'h44', 'describe' => 'Алісе Голубенький', 'textColor' => 'white'],
+    ['value' => 'AntiqueWhite', 'article' => 'h45', 'describe' => 'Антикварно білий', 'textColor' => 'black'],
+    ['value' => 'Aqua', 'article' => 'h46', 'describe' => 'Акуа', 'textColor' => 'black'],
+    ['value' => 'Aquamarine', 'article' => 'h47', 'describe' => 'Аквамарінковий', 'textColor' => 'black'],
+    ['value' => 'Azure', 'article' => 'h48', 'describe' => 'Ажур', 'textColor' => 'black'],
+    ['value' => 'Beige', 'article' => 'h49', 'describe' => 'Бейже', 'textColor' => 'black'],
+    ['value' => 'Bisque', 'article' => 'h40', 'describe' => 'Бісквуітто', 'textColor' => 'black'],
+    ['value' => 'Black', 'article' => 'h11', 'describe' => 'Афроамериканський', 'textColor' => 'white'],
+    ['value' => 'BlanchedAlmond', 'article' => 'h12', 'describe' => 'Бланчед кароч', 'textColor' => 'white'],
+    ['value' => 'Blue', 'article' => 'h13', 'describe' => 'Голубенький', 'textColor' => 'white'],
+    ['value' => 'BlueViolet', 'article' => 'h14', 'describe' => 'Блю віолетте', 'textColor' => 'white'],
+    ['value' => 'Brown', 'article' => 'h15', 'describe' => 'Брун', 'textColor' => 'white'],
+    ['value' => 'BurlyWood', 'article' => 'h16', 'describe' => 'Якесь там дерево', 'textColor' => 'white'],
+    ['value' => 'CadetBlue', 'article' => 'h17', 'describe' => 'Голубий кадет', 'textColor' => 'white'],
 ];
 
-var_dump($_GET);
+//var_dump($_GET);
 
 if (isset($_REQUEST['isSearch']) && ($_REQUEST['isSearch'] == 'Y')) {
     $searchValue = $_REQUEST['search'];
@@ -82,8 +81,46 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
         createUnit('colour', $addColourParams);
         next($_GET['newMerchUnderTypeColours']);
     }
-   // header('Location: merch.php');
+
+    $availableSizeParams = [
+        'merch_under_type_id' => $lastAddedMerchUnderTypeId['id'],
+        'S_a' => $_GET['newMerchUnderTypeAvailableSizes']['s_a'],
+        'S_b' => $_GET['newMerchUnderTypeAvailableSizes']['s_b'],
+        'M_a' => $_GET['newMerchUnderTypeAvailableSizes']['m_a'],
+        'M_b' => $_GET['newMerchUnderTypeAvailableSizes']['m_b'],
+        'L_a' => $_GET['newMerchUnderTypeAvailableSizes']['l_a'],
+        'L_b' => $_GET['newMerchUnderTypeAvailableSizes']['l_b'],
+        'XL_a' => $_GET['newMerchUnderTypeAvailableSizes']['xl_a'],
+        'XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['xl_b'],
+        'XXL_a' => $_GET['newMerchUnderTypeAvailableSizes']['xxl_a'],
+        'XXL_b' =>  $_GET['newMerchUnderTypeAvailableSizes']['xxl_b'],
+        '3XL_a' =>  $_GET['newMerchUnderTypeAvailableSizes']['3xl_a'],
+        '3XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['3xl_b'],
+        '4XL_a' => $_GET['newMerchUnderTypeAvailableSizes']['4xl_a'],
+        '4XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['4xl_b'],
+        '5XL_a' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_a'],
+        '5XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_b'],
+        ];
+
+    foreach ($availableSizeParams as &$availableSizeParam) {
+        if (empty($availableSizeParam)) {
+            $availableSizeParam = NULL;
+        }
+    }
+
+    createUnit('size', $availableSizeParams);
+    header('Location: merch.php');
 }
+
+if (isset($_GET['MerchUnderTypeDelete'])) {
+    $merchUnderTypeDelParam = [
+        'id' => $_GET['MerchUnderTypeDelete'],
+    ];
+
+    if(removeUnit('merchUnderType', $merchUnderTypeDelParam)) {
+        header('Location: merch.php');
+    }
+};
 
 $positions = getListOfMerchTypes($searchValue);
 $underPositions = getListOfMerchUnderTypes($searchValue);
