@@ -127,18 +127,19 @@ h2 {
 
 .color-block {
   display: flex;
+    border: 1px solid #575757;
   justify-content: center;
   align-items: center;
   //transform: skew(-20deg);
-  border-radius: 50%;
-  height: 40px;
-  width: 60px;
-  margin: 0 10px 10px 10px;
+  height: 50px;
+  width: 50px;
+  margin: 0 5px 5px 5px;
 }
 
 .color-block-text {
   //transform: skew(20deg);
   color: white;
+    font-weight: bolder;
 }
 
 .size-table-div {
