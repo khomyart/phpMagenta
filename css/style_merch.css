@@ -150,3 +150,7 @@ h2 {
   font-weight: normal;
   margin-bottom: 15px;
 }
+
+.table td, .table th {
+  border-style: none;
+}

@@ -19,7 +19,7 @@ function getListOfMerchTypes($filter = '')
 }
 
 /**
- * Getting list of merch unertypes, like types of men or woman clothes
+ * Getting list of merch under types, like types of men or woman clothes
  *
  * @param string $filter
  * @return array
@@ -37,7 +37,7 @@ function getListOfMerchUnderTypes($filter = '')
 }
 
 /**
- * Colors which are related to merch undertype
+ * Colors which are related to merch under type
  *
  * @param string $filter
  * @return array
@@ -55,6 +55,8 @@ function getListOfColourPack($filter = '')
 }
 
 /**
+ * List of available sizes which are related to merch under type
+ *
  * @param string $filter
  * @return array
  */
@@ -72,7 +74,14 @@ function getListOfAvailableSizes($filter = '')
     return $results;
 }
 
-function createUnit($type, $params)
+/**
+ * Create some unit, depends of $type value
+ *
+ * @param $type
+ * @param $params
+ * @return bool
+ */
+function insertUnit($type, $params)
 {
     if($type === 'merchType') {
         $query = 'INSERT INTO `merch_types`(`merch_type_name`) VALUES (:merchTypeName);';
@@ -96,6 +105,13 @@ function createUnit($type, $params)
     return performQuery($query, $params) ? true : false;
 }
 
+/**
+ * Update unit, depends of $type value
+ *
+ * @param $type
+ * @param $params
+ * @return bool
+ */
 function updateUnit($type, $params) {
     if($type === 'merchType') {
         $query = 'UPDATE `merch_types` SET `merch_type_name` = :merchTypeName WHERE `id` = :id;';
@@ -104,6 +120,13 @@ function updateUnit($type, $params) {
     return performQuery($query, $params) ? true : false;
 }
 
+/**
+ * Remove unit, depends of $type value
+ *
+ * @param $type
+ * @param $params
+ * @return bool
+ */
 function removeUnit($type, $params) {
     if($type === 'merchType') {
         $query = 'DELETE from `merch_types` WHERE `id` = :id;';
@@ -114,42 +137,6 @@ function removeUnit($type, $params) {
     }
 
     return performQuery($query, $params) ? true : false;
-}
-
-/**
- * Returns join list\array of contacts
- *
- * @param $filter
- * @return array
- */
-function getJoinListOfContacts($filter = '')
-{
-    $query = 'SELECT c.id, c.phone, c.first_name, c.last_name, u.email, u.nickname FROM `contact` AS c LEFT JOIN `user` AS u ON c.user_id = u.id WHERE 1';
-
-    if (is_string($filter) && (trim($filter) != '')) {
-        $query .= ' AND ( (c.first_name LIKE :filter) OR (c.last_name LIKE :filter) OR (c.phone LIKE :filter) OR (c.id LIKE :filter) OR (u.email LIKE :filter) OR (u.nickname LIKE :filter) )';
-        $params['filter'] = '%' . $filter . '%';
-    }
-
-    return getAllRows($query, $params);
-}
-
-/**
- * Returns list\array of users
- *
- * @param $filter
- * @return array
- */
-function getListOfUsers($filter = '')
-{
-    $query = 'SELECT * FROM `user` WHERE 1';
-
-    if (is_string($filter) && (trim($filter) != '')) {
-        $query .= ' AND ( (`email` LIKE :filter) OR (`nickname` LIKE :filter) OR (`type` LIKE :filter) )';
-        $params['filter'] = '%' . $filter . '%';
-    }
-
-    return getAllRows($query, $params);
 }
 
 /**
@@ -193,84 +180,3 @@ function contactErrorList($phone, $firstName, $lastName)
     return $feedbackContactError;
 }
 
-/**
- * Creates a new contact
- *
- * @param $firstName
- * @param $lastName
- * @param $phone
- * @return bool
- */
-function addContact($phone, $firstName, $lastName)
-{
-    $phone = trim($phone);
-    $firstName = trim($firstName);
-    $lastName = trim($lastName);
-
-    $query = 'INSERT INTO `contact`(`user_id`, `phone`, `first_name`, `last_name`) VALUES (:userId, :phone, :firstName, :lastName);';
-    $params = [
-        'userId' => $_SESSION['auth']['id'],
-        'phone' => $phone,
-        'firstName' => $firstName,
-        'lastName' => $lastName
-    ];
-
-    if(empty(contactErrorList($phone, $firstName, $lastName))) {
-        if(performQuery($query, $params)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
-/**
- * Edits contact with given id
- *
- * @param $id
- * @param $phone
- * @param $firstName
- * @param $lastName
- * @return bool
- */
-function editContact($id, $phone, $firstName, $lastName)
-{
-    $query = 'UPDATE `contact` SET `phone`= :phone,`first_name`= :firstName,`last_name`= :lastName WHERE `id`= :id;';
-
-    $phone = trim($phone);
-    $firstName = trim($firstName);
-    $lastName = trim($lastName);
-
-    $params = [
-        'id' => $id,
-        'phone' => $phone,
-        'firstName' => $firstName,
-        'lastName' => $lastName,
-    ];
-
-    if(empty(contactErrorList($phone, $firstName, $lastName))) {
-        if(performQuery($query, $params)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
-/**
- * Removes contact with given id
- *
- * @param $id
- * @return bool
- */
-function removeContact($id)
-{
-    $query = 'DELETE FROM `contact` WHERE `id` = :id;';
-    $params = ['id' => $id];
-
-    if(performQuery($query, $params)) {
-        return true;
-    } else {
-        return false;
-    }
-}

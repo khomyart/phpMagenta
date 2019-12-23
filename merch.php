@@ -22,24 +22,26 @@ $availableColours = [
     ['value' => 'CadetBlue', 'article' => 'h17', 'describe' => 'Голубий кадет', 'textColor' => 'white'],
 ];
 
-//var_dump($_GET);
-
+/* Searching algorithm */
 if (isset($_REQUEST['isSearch']) && ($_REQUEST['isSearch'] == 'Y')) {
     $searchValue = $_REQUEST['search'];
 }
 
+/* If pressed "cancel" - reload page and clear all $post/$get super globals */
 if (isset($_GET['cancel'])) {
     header('Location: merch.php');
 }
 
+/* Activating when user press' "Save" key and perform merch type save */
 if (isset($_GET['newMerchTypeSave'])) {
     $params = [
         'merchTypeName' => $_GET['newMerchTypeName'],
     ];
 
-    createUnit('merchType', $params);
+    insertUnit('merchType', $params);
 }
 
+/* Activating when user press' "Save" key and perform merch type save after editing it */
 if (isset($_GET['MerchTypeEditSave'])) {
     $params = [
         'merchTypeName' => $_GET['MerchTypeEditName'],
@@ -49,6 +51,7 @@ if (isset($_GET['MerchTypeEditSave'])) {
     updateUnit('merchType', $params);
 }
 
+/* Performs merch type delete when appropriate button has been pressed */
 if (isset($_GET['MerchTypeDelete'])) {
     $params = [
         'id' => $_GET['MerchTypeDelete'],
@@ -57,6 +60,7 @@ if (isset($_GET['MerchTypeDelete'])) {
     removeUnit('merchType', $params);
 }
 
+/* Performs merch under type creating when all fields are filled and appropriate button has been pressed */
 if (isset($_GET['newMerchUnderTypeSave'])) {
     $params = [
         'merchTypeId' => $_GET['newMerchUnderType']['listOfTypes'],
@@ -66,7 +70,7 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
         'price' => $_GET['newMerchUnderType']['price'],
     ];
 
-    createUnit('merchUnderType', $params);
+    insertUnit('merchUnderType', $params);
 
     $lastAddedMerchUnderTypeQuery = 'SELECT id FROM `merch_under_types` ORDER BY id DESC LIMIT 1';
     $lastAddedMerchUnderTypeId = getRow($lastAddedMerchUnderTypeQuery, []);
@@ -78,7 +82,8 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
             'article' => key($_GET['newMerchUnderTypeColours']),
         ];
 
-        createUnit('colour', $addColourParams);
+        insertUnit('colour', $addColourParams);
+        /* foreach dont do array's pointer transfer to a next element, so we need to do it manually */
         next($_GET['newMerchUnderTypeColours']);
     }
 
@@ -102,16 +107,17 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
         '5XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_b'],
         ];
 
-    foreach ($availableSizeParams as &$availableSizeParam) {
-        if (empty($availableSizeParam)) {
-            $availableSizeParam = NULL;
-        }
-    }
-
-    createUnit('size', $availableSizeParams);
+    insertUnit('size', $availableSizeParams);
     header('Location: merch.php');
 }
 
+foreach ($availableSizeParams as &$availableSizeParam) {
+    if (empty($availableSizeParam)) {
+        $availableSizeParam = NULL;
+    }
+}
+
+/* Performs merch under type deleting when appropriate button has been pressed */
 if (isset($_GET['MerchUnderTypeDelete'])) {
     $merchUnderTypeDelParam = [
         'id' => $_GET['MerchUnderTypeDelete'],
@@ -122,13 +128,19 @@ if (isset($_GET['MerchUnderTypeDelete'])) {
     }
 };
 
+/* Merch types */
 $positions = getListOfMerchTypes($searchValue);
+/* Merch under types */
 $underPositions = getListOfMerchUnderTypes($searchValue);
+/* Colors for particular under types (under positions) */
 $colourPacks = getListOfColourPack($searchValue);
+/* Sizes for particular under types (under positions) */
 $availableSizes = getListOfAvailableSizes($searchValue);
+
 $merchTypesDisplayBlock = false;
 
-if ($_GET['MerchTypeEdit']) {
+/* If user is currently editing merch type, hide another merch types */
+if ($_GET['MerchTypeEdit'] || $_GET['newMerchUnderType']) {
     $merchTypesDisplayBlock = true;
 }
 
@@ -252,8 +264,7 @@ include './templates/header.php'; ?>
                                                 height: 20px;
                                                 background-color: <?=$availableColour['value']?>;
                                                 float: right;
-                                                margin-left: 5px;"
-                                        >
+                                                margin-left: 5px;">
                                         </div>
                                     </label>
                                 </div>
@@ -308,6 +319,7 @@ include './templates/header.php'; ?>
                             </h2>
                         </div>
                     </div>
+                    <div class="space-between-lots"></div>
                     <!--MerchUnderTypeCreate close-->
                 <?php
                 }
@@ -403,7 +415,7 @@ include './templates/header.php'; ?>
                             </div>
                             <?php
                             foreach ($underPositions as $underPosition) {
-                                if ($underPosition['merch_type_id'] === $position['id']) { ?>
+                                if ($underPosition['merch_type_id'] === $position['id']) {?>
                                     <div class="full-length-back position-relative">
                                         <div class="dropdown position-absolute"
                                              style="margin-top:-25px; top:40px; right: 15px;">
@@ -455,18 +467,35 @@ include './templates/header.php'; ?>
                                             } ?>
                                         </div>
                                         <div class="size-table-div">
-                                            <table class="table">
-                                                <thead class="thead-light">
+                                            <table class="table" style="background-color: white;">
+                                                <thead>
                                                 <tr>
                                                     <th scope="col"></th>
                                                     <?php foreach ($availableSizes as $availableSize) {
                                                         $i = 0;
                                                         if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+
+                                                            $availableSizeParamEmptinessCounter = 0;
+                                                            $iterationCounter = 0;
+
+                                                            foreach ($availableSize as $size) {
+                                                                $iterationCounter += 1;
+                                                                if ($size === null) {
+                                                                    $availableSizeParamEmptinessCounter += 1;
+                                                                }
+                                                            }
+
+                                                            if ($availableSizeParamEmptinessCounter  === ($iterationCounter - 2)) {
+                                                                $availableSizesTableDisplay = 'display: none';
+                                                            } else {
+                                                                $availableSizesTableDisplay = '';
+                                                            }
+
                                                             foreach ($availableSize as $size) {
                                                                 if (isset($size) &&
                                                                     (key($availableSize) !== 'merch_under_type_id') &&
                                                                     (key($availableSize) !== 'id') &&
-                                                                    !($i % 2)) { ?>
+                                                                    !($i % 2)) {?>
                                                                     <th scope="col"><?= substr(key($availableSize), 0, -2); ?></th>
                                                                     <?php
                                                                 }
@@ -478,9 +507,9 @@ include './templates/header.php'; ?>
                                                     ?>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody style="<?= $availableSizesTableDisplay ?>;">
                                                 <tr>
-                                                    <th scope="row">a (см)</th>
+                                                    <th scope="row" >a (см)</th>
                                                     <?php foreach ($availableSizes as $availableSize) {
                                                         $i = 0;
                                                         if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
