@@ -3,6 +3,7 @@ include './config.php';
 include './lib/db.php';
 include './lib/users.php';
 include './lib/merch.php';
+include './lib/colors.php';
 
 /*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
