@@ -315,7 +315,7 @@ include './templates/header.php'; ?>
                         </div>
                         <div class="position-price">
                             <h2>
-                                Ціна: <input class="form-control " type="number" name="newMerchUnderType[price]"> грн
+                                Ціна: <input class="form-control" type="number" name="newMerchUnderType[price]"> грн
                             </h2>
                         </div>
                     </div>

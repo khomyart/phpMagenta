@@ -1,8 +1,8 @@
 <?php
 $currentScript = basename($_SERVER['SCRIPT_FILENAME']);
 
-$contactsCss = $currentScript == 'contacts.php' ? 'active' : '';
-$usersCss = $currentScript == 'users.php' ? 'active' : '';
+$merchCss = $currentScript == 'merch.php' ? 'active' : '';
+$colorCss = $currentScript == 'colors.php' ? 'active' : '';
 
 if ($_POST['logout_button']) {
     session_destroy();
@@ -22,17 +22,15 @@ if ($_POST['logout_button']) {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown" >
                 <ul class="navbar-nav ml-auto">
-                    <?php if($_SESSION['auth']['type'] == 'administrator') { ?>
-                        <li class="nav-item">
-                            <a class="nav-link <?= $contactsCss; ?>" href="./contacts.php">Contacts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?= $usersCss; ?>" href="./users.php">Users</a>
-                        </li>
-                    <?php } ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?= $merchCss; ?>" href="./merch.php">Товари</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= $colorCss; ?>" href="./colors.php">Кольори</a>
+                    </li>
                 </ul>
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle"
+                    <button class="btn dropdown-toggle"
                             type="button"
                             id="dropdownMenuButton"
                             data-toggle="dropdown"
@@ -48,7 +46,7 @@ if ($_POST['logout_button']) {
                                     name="logout_button"
                                     value="logout"
                             >
-                                Log out
+                                Вилогуватись
                             </button>
                         </form>
                     </div>
