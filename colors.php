@@ -20,7 +20,29 @@ if ($_GET['newColorSave']) {
         'description' => $_GET['description'],
         'textColor' => $_GET['textColor'],
     ];
-    insertColorUnit($params);
+    editColorUnit('insert', $params);
+
+    header ('Location: colors.php');
+}
+
+if ($_GET['existColorRemove']) {
+    $params = [
+        'id' => $_GET['existColorRemove'],
+    ];
+    editColorUnit('remove', $params);
+
+    header ('Location: colors.php');
+}
+
+if ($_GET['existColorSave']) {
+    $params = [
+        'color' => $_GET['existColorFieldEdit'],
+        'article' => $_GET['existColorArticleFieldEdit'],
+        'description' => $_GET['existColorDescriptionFieldEdit'],
+        'textColor' => $_GET['existTextColorFieldEdit'],
+        'id' => $_GET['existColorSave'],
+    ];
+    editColorUnit('update', $params);
 
     header ('Location: colors.php');
 }
@@ -67,30 +89,30 @@ if ($_GET['cancel']) {
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="row">№</th>
-                        <th scope="col">Колір</th>
-                        <th scope="col">Артикль</th>
-                        <th scope="col">Опис</th>
-                        <th scope="col">Колір тексту</th>
-                        <th scope="col"></th>
+                        <th scope="row" width="10%">№</th>
+                        <th scope="col" width="20%">Колір</th>
+                        <th scope="col" width="20%">Артикль</th>
+                        <th scope="col" width="20%">Опис</th>
+                        <th scope="col" width="20%">Колір тексту</th>
+                        <th scope="col" width="10%"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
                     if ($_GET['newColor']) { ?>
                         <tr>
-                            <th scope="row"></th>
+                            <th scope="row"> # </th>
                             <td>
-                                <input class="form-control" name="color" style="text-align: center;">
+                                <input name="color" class="form-control" style="text-align: center;">
                             </td>
                             <td>
-                                <input class="form-control" name="article" style="text-align: center;">
+                                <input name="article" class="form-control" style="text-align: center;">
                             </td>
                             <td>
-                                <input class="form-control" name="description" style="text-align: center;">
+                                <input name="description" class="form-control" style="text-align: center;">
                             </td>
                             <td>
-                                <input class="form-control" list="textColors" name="textColor" style="text-align: center;">
+                                <input list="textColors" name="textColor" class="form-control" style="text-align: center;">
                                 <datalist id="textColors">
                                     <option value="Black">
                                     <option value="White">
@@ -119,7 +141,51 @@ if ($_GET['cancel']) {
                     <?php
                     }
                     $i = 1;
-                    foreach ($listOfColors as $color) { ?>
+                    foreach ($listOfColors as $color) { 
+                        if ($color['id'] == $_GET['existColorEdit']) { ?>
+                        <tr>
+                            <th scope="row"><?= $i ?></th>
+                            <td style="background-color: <?= $color['color'] ?>;
+                                color: <?= $color['textColor'] ?>;
+                                font-weight: bolder;"
+                            >
+                                <input name="existColorFieldEdit" class="form-control" value="<?= $color['color'] ?>" style="text-align: center;">
+                            </td>
+                            <td>
+                                <input name="existColorArticleFieldEdit" class="form-control" value="<?= $color['article'] ?>" style="text-align: center;">
+                            </td>
+                            <td>
+                                <input name="existColorDescriptionFieldEdit" class="form-control" value="<?= $color['description'] ?>" style="text-align: center;">
+                            </td>
+                            <td>
+                                <input list="textColors" class="form-control" name="existTextColorFieldEdit" style="text-align: center;" style="text-align: center;" value="<?= $color['textColor'] ?>">
+                                <datalist id="textColors">
+                                    <option value="Black">
+                                    <option value="White">
+                                </datalist>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle"
+                                            type="button" id="dropdownMenuButton"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                    >
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <button type="submit" class="dropdown-item" name="existColorSave" value="<?= $color['id'] ?>">
+                                            Зберегти
+                                        </button>
+                                        <button type="submit" class="dropdown-item" name="cancel" value="submit">
+                                            Відмінити
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php 
+                        } else {?>
                         <tr>
                             <th scope="row"><?= $i ?></th>
                             <td style="background-color: <?= $color['color'] ?>;
@@ -131,9 +197,28 @@ if ($_GET['cancel']) {
                             <td><?= $color['article'] ?></td>
                             <td><?= $color['description'] ?></td>
                             <td><?= $color['textColor'] ?></td>
-                            <td></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle"
+                                            type="button" id="dropdownMenuButton"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                    >
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <button type="submit" class="dropdown-item" name="existColorEdit" value="<?= $color['id'] ?>">
+                                            Редагувати
+                                        </button>
+                                        <button type="submit" class="dropdown-item" name="existColorRemove" value="<?= $color['id'] ?>">
+                                            Видалити
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     <?php
+                        }
                         $i++;
                     } ?>
                     </tbody>

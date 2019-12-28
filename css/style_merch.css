@@ -61,6 +61,33 @@ h2 {
   background-color: rgba(128, 128, 128, 0.096);
 }
 
+.uploading-image-input {
+  border-top: 1px solid #7d7d7d;
+  border-bottom: 1px solid #7d7d7d;
+  border-radius: 10px 0px 0px 10px;
+  width: 100%;
+  height: 2rem;
+  outline-style: none;
+}
+
+.uploading-button-input {
+  border-radius: 0 10px 10px 0;
+  border: none;
+  height: 2rem;
+  width: 200px;
+  transition: 0.1s all ease-in-out;
+}
+
+.uploading-button-input:hover {
+  color: white;
+  font-weight: bolder;
+  background-color: rgba(117, 0, 117, 0.78);
+}
+
+.uploading-button-input:focus {
+  outline-style: none;
+}
+
 .info-container {
   padding: 1rem;
   display: flex;
@@ -72,7 +99,7 @@ h2 {
 }
 
 .info-container-img {
-  margin: 0rem;
+  margin-left: 0rem;
   width: 40%;
   height: 100%;
   border-radius: 10px;
@@ -87,7 +114,7 @@ h2 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .info-container-text {
@@ -127,7 +154,7 @@ h2 {
 
 .color-block {
   display: flex;
-    border: 1px solid #575757;
+  border: 1px solid #575757;
   justify-content: center;
   align-items: center;
   //transform: skew(-20deg);
@@ -139,7 +166,13 @@ h2 {
 .color-block-text {
   //transform: skew(20deg);
   color: white;
-    font-weight: bolder;
+  font-weight: bold;
+  user-select: none;
+  margin: -20px 0px 0px -20px;
+}
+
+.color_checkbox:checked + .color_checkbox_label > div {
+  border: 5px solid rgba(0, 0, 0, 0.603);
 }
 
 .size-table-div {
@@ -151,6 +184,7 @@ h2 {
   margin-bottom: 15px;
 }
 
-.table td, .table th {
+.table td,
+.table th {
   border-style: none;
 }

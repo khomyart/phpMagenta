@@ -44,7 +44,9 @@ function getListOfMerchUnderTypes($filter = '')
  */
 function getListOfColourPack($filter = '')
 {
-    $query = 'SELECT * FROM `colour_pack` WHERE 1';
+    $query = 'SELECT m.merch_under_type_id, m.color_id, a.color, a.article, a.description, a.textColor 
+                FROM `merch_under_types_color` as m 
+                LEFT JOIN `available_colors` as a ON m.color_id = a.id;';
 
     if (is_string($filter) && (trim($filter) != '')) {
         $query .= ' AND ( (`first_name` LIKE :filter) OR (`last_name` LIKE :filter) OR (`phone` LIKE :filter) )';
@@ -52,6 +54,13 @@ function getListOfColourPack($filter = '')
     }
 
     return getAllRows($query, $params);
+}
+
+function getListOfAvailableColors()
+{
+    $query = 'SELECT * FROM `available_colors`;';
+
+    return getAllRows($query);
 }
 
 /**
@@ -92,9 +101,9 @@ function insertUnit($type, $params)
                         VALUES (:merchTypeId, :merchUnderTypeName, :img, :description, :price);';
     }
 
-    if($type === 'colour') {
-        $query = 'INSERT INTO `colour_pack`(`merch_under_type_id`, `color`, `article`) 
-                        VALUES (:merchUnderTypeId, :color, :article);';
+    if($type === 'merchUnderTypeColor') {
+        $query = 'INSERT INTO `merch_under_types_color`(`merch_under_type_id`, `color_id`) 
+                        VALUES (:merchUnderTypeId, :colorId);';
     }
 
     if($type === 'size') {
