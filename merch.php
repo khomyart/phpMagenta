@@ -3,24 +3,10 @@ include './imports.php';
 header("Content-Type: text/html; charset=UTF-8");
 
 $searchValue = '';
-$availableColours = [
-    ['value' => 'red', 'article' => 'h41', 'describe' => 'Красноватенький', 'textColor' => 'white'],
-    ['value' => 'green', 'article' => 'h42', 'describe' => 'Зеленуватенький', 'textColor' => 'white'],
-    ['value' => 'AliceBlue', 'article' => 'h44', 'describe' => 'Алісе Голубенький', 'textColor' => 'white'],
-    ['value' => 'AntiqueWhite', 'article' => 'h45', 'describe' => 'Антикварно білий', 'textColor' => 'black'],
-    ['value' => 'Aqua', 'article' => 'h46', 'describe' => 'Акуа', 'textColor' => 'black'],
-    ['value' => 'Aquamarine', 'article' => 'h47', 'describe' => 'Аквамарінковий', 'textColor' => 'black'],
-    ['value' => 'Azure', 'article' => 'h48', 'describe' => 'Ажур', 'textColor' => 'black'],
-    ['value' => 'Beige', 'article' => 'h49', 'describe' => 'Бейже', 'textColor' => 'black'],
-    ['value' => 'Bisque', 'article' => 'h40', 'describe' => 'Бісквуітто', 'textColor' => 'black'],
-    ['value' => 'Black', 'article' => 'h11', 'describe' => 'Афроамериканський', 'textColor' => 'white'],
-    ['value' => 'BlanchedAlmond', 'article' => 'h12', 'describe' => 'Бланчед кароч', 'textColor' => 'white'],
-    ['value' => 'Blue', 'article' => 'h13', 'describe' => 'Голубенький', 'textColor' => 'white'],
-    ['value' => 'BlueViolet', 'article' => 'h14', 'describe' => 'Блю віолетте', 'textColor' => 'white'],
-    ['value' => 'Brown', 'article' => 'h15', 'describe' => 'Брун', 'textColor' => 'white'],
-    ['value' => 'BurlyWood', 'article' => 'h16', 'describe' => 'Якесь там дерево', 'textColor' => 'white'],
-    ['value' => 'CadetBlue', 'article' => 'h17', 'describe' => 'Голубий кадет', 'textColor' => 'white'],
-];
+$availableColours = getListOfAvailableColors();
+
+//echo $_GET['fileLocation'];
+//var_dump($_GET);
 
 /* Searching algorithm */
 if (isset($_REQUEST['isSearch']) && ($_REQUEST['isSearch'] == 'Y')) {
@@ -60,6 +46,15 @@ if (isset($_GET['MerchTypeDelete'])) {
     removeUnit('merchType', $params);
 }
 
+$targetFile = $_GET['fileLocation'];
+$imgMerchUnderTypeZIndex = -1;
+$addingImageInputType = '';
+
+if ($targetFile) {
+    $imgMerchUnderTypeZIndex = 4000;
+    $addingImageInputType = 'hidden';
+}
+
 /* Performs merch under type creating when all fields are filled and appropriate button has been pressed */
 if (isset($_GET['newMerchUnderTypeSave'])) {
     $params = [
@@ -78,13 +73,10 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
    foreach ($_GET['newMerchUnderTypeColours'] as $colour) {
         $addColourParams = [
             'merchUnderTypeId' => $lastAddedMerchUnderTypeId['id'],
-            'color' => $colour,
-            'article' => key($_GET['newMerchUnderTypeColours']),
+            'colorId' => $colour,
         ];
 
-        insertUnit('colour', $addColourParams);
-        /* foreach dont do array's pointer transfer to a next element, so we need to do it manually */
-        next($_GET['newMerchUnderTypeColours']);
+        insertUnit('merchUnderTypeColor', $addColourParams);
     }
 
     $availableSizeParams = [
@@ -107,14 +99,14 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
         '5XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_b'],
         ];
 
+        foreach ($availableSizeParams as &$availableSizeParam) {
+            if (empty($availableSizeParam)) {
+                $availableSizeParam = NULL;
+            }
+        }
+
     insertUnit('size', $availableSizeParams);
     header('Location: merch.php');
-}
-
-foreach ($availableSizeParams as &$availableSizeParam) {
-    if (empty($availableSizeParam)) {
-        $availableSizeParam = NULL;
-    }
 }
 
 /* Performs merch under type deleting when appropriate button has been pressed */
@@ -151,7 +143,9 @@ include './templates/header.php'; ?>
 <?php include './templates/navigation.php'; ?>
 
 <div class="container">
+    <form action="./lib/upload.php" method="post" enctype="multipart/form-data" id="uploadingFormFile">
 
+    </form>
     <div class="row">
         <div class="col">
             <br />
@@ -232,10 +226,19 @@ include './templates/header.php'; ?>
                                 } ?>
                             </select>
                         </div>
+                        <div class="input-group mt-4 col-6">
+                            <div class="custom-file d-flex justify-content-between">
+                                <input type="file" class="uploading-image-input" form="uploadingFormFile" name="fileToUpload" id="fileToUpload">
+                                <button class="uploading-button-input" type="submit" form="uploadingFormFile" name="submit">
+                                    Завантажити
+                                </button>
+                            </div>
+                        </div>
                         <div class="info-container">
                             <div class="info-container-img d-flex flex-column justify-content-center align-items-center">
+                                <img src="<?= $targetFile ?>" style="z-index: <?= $imgMerchUnderTypeZIndex ?>;" alt="">
                                 <label>Посилання на зображення</label>
-                                <input class="form-control" name="newMerchUnderType[img]" style="width: 100%;">
+                                <input type="<?= $addingImageInputType ?>" class="form-control" name="newMerchUnderType[img]" style="width: 100%;" value="<?= $targetFile ?>">
                             </div>
                             <div class="info-container-text">
                                 <div class="info-container-text-header d-flex flex-column justify-content-center align-items-center">
@@ -255,20 +258,26 @@ include './templates/header.php'; ?>
                             <?php
                             $i=0;
                             foreach ($availableColours as $availableColour) {?>
-                                <div style="margin: 0px 15px 15px 15px;">
-                                    <input class="form-check-input" type="checkbox" id="<?=$i?>"
-                                           name="newMerchUnderTypeColours[<?=$availableColour['article']?>]"
-                                           value="<?=$availableColour['value']?>">
-                                    <label class="form-check-label" for="<?=$i?>"> <?=$availableColour['value']?>, <?=$availableColour['article']?>
-                                        <div style="width: 20px;
-                                                height: 20px;
-                                                background-color: <?=$availableColour['value']?>;
-                                                float: right;
-                                                margin-left: 5px;">
+                                <div style="margin: 0px 25px 15px 25px;
+                                            ">
+                                    <input class="form-check-input color_checkbox" type="checkbox" id="<?= $i ?>"
+                                           name="newMerchUnderTypeColours[<?= $i ?>]"
+                                           value="<?=$availableColour['id']?>">
+                                    <label class="form-check-label color_checkbox_label" for="<?= $i ?>">
+                                        <div class="color-block" style="
+                                                background-color: <?=$availableColour['color']?>;
+                                                margin-left: 0px;" 
+                                                data-toggle="tooltip" data-placement="top" 
+                                                title="<?=$availableColour['description']?>">
+                                            <div class="color-block-text" style="
+                                                    color: <?=$availableColour['textColor']?>">
+                                                    <?=$availableColour['article']?>
+                                            </div>
                                         </div>
                                     </label>
                                 </div>
                             <?php
+                                /* Making unique id every foreach iteration to prevent checkboxes problems */
                                 $i += 1;
                             } ?>
                         </div>
@@ -457,8 +466,10 @@ include './templates/header.php'; ?>
                                             <?php foreach ($colourPacks as $colour) {
                                                 if ($underPosition['id'] === $colour['merch_under_type_id']) { ?>
                                                     <div class="color-block"
-                                                         style="background-color: <?= $colour['color'] ?>;">
-                                                        <div class="color-block-text">
+                                                         style="background-color: <?= $colour['color'] ?>;"
+                                                         data-toggle="tooltip" data-placement="top" 
+                                                         title="<?= $colour['description'] ?>">
+                                                        <div class="color-block-text" style="color: <?= $colour['textColor'] ?>">
                                                             <?= $colour['article'] ?>
                                                         </div>
                                                     </div>
