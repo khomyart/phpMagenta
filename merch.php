@@ -2,6 +2,11 @@
 include './imports.php';
 header("Content-Type: text/html; charset=UTF-8");
 
+/*
+ * img/BST/sizeTypes/abTypeImage.png
+ * img/BST/sizeTypes/abcTypeImage.png
+ * */
+
 $searchValue = '';
 $availableColours = getListOfAvailableColors();
 
@@ -83,20 +88,28 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
         'merch_under_type_id' => $lastAddedMerchUnderTypeId['id'],
         'S_a' => $_GET['newMerchUnderTypeAvailableSizes']['s_a'],
         'S_b' => $_GET['newMerchUnderTypeAvailableSizes']['s_b'],
+        'S_c' => $_GET['newMerchUnderTypeAvailableSizes']['s_c'],
         'M_a' => $_GET['newMerchUnderTypeAvailableSizes']['m_a'],
         'M_b' => $_GET['newMerchUnderTypeAvailableSizes']['m_b'],
+        'M_c' => $_GET['newMerchUnderTypeAvailableSizes']['m_c'],
         'L_a' => $_GET['newMerchUnderTypeAvailableSizes']['l_a'],
         'L_b' => $_GET['newMerchUnderTypeAvailableSizes']['l_b'],
+        'L_c' => $_GET['newMerchUnderTypeAvailableSizes']['l_c'],
         'XL_a' => $_GET['newMerchUnderTypeAvailableSizes']['xl_a'],
         'XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['xl_b'],
+        'XL_c' => $_GET['newMerchUnderTypeAvailableSizes']['xl_c'],
         'XXL_a' => $_GET['newMerchUnderTypeAvailableSizes']['xxl_a'],
         'XXL_b' =>  $_GET['newMerchUnderTypeAvailableSizes']['xxl_b'],
+        'XXL_c' =>  $_GET['newMerchUnderTypeAvailableSizes']['xxl_c'],
         '3XL_a' =>  $_GET['newMerchUnderTypeAvailableSizes']['3xl_a'],
         '3XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['3xl_b'],
+        '3XL_c' =>  $_GET['newMerchUnderTypeAvailableSizes']['3xl_c'],
         '4XL_a' => $_GET['newMerchUnderTypeAvailableSizes']['4xl_a'],
         '4XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['4xl_b'],
+        '4XL_c' => $_GET['newMerchUnderTypeAvailableSizes']['4xl_c'],
         '5XL_a' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_a'],
         '5XL_b' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_b'],
+        '5XL_c' => $_GET['newMerchUnderTypeAvailableSizes']['5xl_c'],
         ];
 
         foreach ($availableSizeParams as &$availableSizeParam) {
@@ -144,7 +157,6 @@ include './templates/header.php'; ?>
 
 <div class="container">
     <form action="./lib/upload.php" method="post" enctype="multipart/form-data" id="uploadingFormFile">
-
     </form>
     <div class="row">
         <div class="col">
@@ -212,7 +224,15 @@ include './templates/header.php'; ?>
                                 </button>
                             </div>
                         </div>
-                        <div style="margin-top:40px;">
+                        <div class="input-group mt-4 col-6">
+                            <div class="custom-file d-flex justify-content-between">
+                                <input type="file" class="uploading-image-input" form="uploadingFormFile" name="fileToUpload" id="fileToUpload">
+                                <button class="uploading-button-input" type="submit" form="uploadingFormFile" name="submit">
+                                    Завантажити
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-top:30px;">
                             <select class="form-control" name="newMerchUnderType[listOfTypes]">
                                 <option value="">
                                     Вид товару
@@ -225,14 +245,6 @@ include './templates/header.php'; ?>
                                     <?php
                                 } ?>
                             </select>
-                        </div>
-                        <div class="input-group mt-4 col-6">
-                            <div class="custom-file d-flex justify-content-between">
-                                <input type="file" class="uploading-image-input" form="uploadingFormFile" name="fileToUpload" id="fileToUpload">
-                                <button class="uploading-button-input" type="submit" form="uploadingFormFile" name="submit">
-                                    Завантажити
-                                </button>
-                            </div>
                         </div>
                         <div class="info-container">
                             <div class="info-container-img d-flex flex-column justify-content-center align-items-center">
@@ -318,6 +330,17 @@ include './templates/header.php'; ?>
                                     <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[3xl_b]"></th>
                                     <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[4xl_b]"></th>
                                     <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[5xl_b]"></th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">c (см)</th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[s_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[m_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[l_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[xl_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[xxl_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[3xl_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[4xl_c]"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="newMerchUnderTypeAvailableSizes[5xl_c]"></th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -477,82 +500,177 @@ include './templates/header.php'; ?>
                                                 }
                                             } ?>
                                         </div>
-                                        <div class="size-table-div">
-                                            <table class="table" style="background-color: white;">
-                                                <thead>
-                                                <tr>
-                                                    <th scope="col"></th>
-                                                    <?php foreach ($availableSizes as $availableSize) {
-                                                        $i = 0;
-                                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                        <?php
+                                        foreach ($availableSizes as $availableSize) {
+                                            if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                $merchUnderTypeAvailableSizeDisplayBlock = 'flex';
+                                                $sizeTableNullPointer = 2;
+                                                $sizeTablePointerIndex = 0;
 
-                                                            $availableSizeParamEmptinessCounter = 0;
-                                                            $iterationCounter = 0;
+                                                foreach ($availableSize as $size) {
+                                                    if ((key($availableSize) !== 'merch_under_type_id')
+                                                        && (key($availableSize) !== 'id')) {
+                                                        if ($size == null) {
+                                                            $sizeTableNullPointer += 1;
+                                                        }
+                                                    }
+                                                    next($availableSize);
+                                                    $sizeTablePointerIndex += 1;
+                                                }
 
-                                                            foreach ($availableSize as $size) {
-                                                                $iterationCounter += 1;
-                                                                if ($size === null) {
-                                                                    $availableSizeParamEmptinessCounter += 1;
+                                                if ($sizeTableNullPointer === $sizeTablePointerIndex) {
+                                                    $merchUnderTypeAvailableSizeDisplayBlock = 'none';
+                                                } ?>
+                                                <div class="size-table-div d-<?= $merchUnderTypeAvailableSizeDisplayBlock ?> w-100 flex-row-reverse justify-content-center">
+                                        <?php
+                                            }
+                                        } ?>
+                                            <div>
+                                                <table class="table" style="background-color: white;">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col"></th>
+                                                        <?php foreach ($availableSizes as $availableSize) {
+                                                            /* Counter which allows do proper sizes display control, used in %2(B), %3(C) */
+                                                            $i = 1;
+                                                            if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                                foreach ($availableSize as $size) {
+                                                                    if (isset($size)
+                                                                        && (key($availableSize) !== 'merch_under_type_id')
+                                                                        && (key($availableSize) !== 'id')
+                                                                        && (($i % 3) == 0)) {?>
+                                                                        <th scope="col"><?= substr(key($availableSize), 0, -2); ?></th>
+                                                                        <?php
+                                                                    }
+                                                                    next($availableSize);
+                                                                    $i += 1;
                                                                 }
                                                             }
-
-                                                            if ($availableSizeParamEmptinessCounter  === ($iterationCounter - 2)) {
-                                                                $availableSizesTableDisplay = 'display: none';
-                                                            } else {
-                                                                $availableSizesTableDisplay = '';
+                                                        }
+                                                        ?>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <th scope="row" >a (см)</th>
+                                                        <?php foreach ($availableSizes as $availableSize) {
+                                                            if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                                $i = 1;
+                                                                foreach ($availableSize as $size) {
+                                                                    if (isset($size)
+                                                                        && (key($availableSize) !== 'merch_under_type_id')
+                                                                        && (key($availableSize) !== 'id')
+                                                                        && (($i % 3) == 0))  { ?>
+                                                                        <th scope="col"><?= $size ?></th>
+                                                                        <?php
+                                                                    }
+                                                                    next($availableSize);
+                                                                    $i += 1;
+                                                                }
                                                             }
+                                                        }
+                                                        ?>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">b (см)</th>
+                                                        <?php foreach ($availableSizes as $availableSize) {
+                                                            if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                                $i = 0;
+                                                                foreach ($availableSize as $size) {
+                                                                    if (isset($size)
+                                                                        && (key($availableSize) !== 'merch_under_type_id')
+                                                                        && (key($availableSize) !== 'id')
+                                                                        && (($i % 3) == 0)) { ?>
+                                                                        <th scope="col"><?= $size ?></th>
+                                                                        <?php
+                                                                    }
+                                                                    next($availableSize);
+                                                                    $i += 1;
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </tr>
 
+                                                    <?php foreach ($availableSizes as $availableSize) {
+                                                        /*if C field is not empty - show it, else hide*/
+                                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                            $i = -1;
+                                                            $cFieldNullPointer = 0;
+                                                            $cFieldPointerIndex = 0;
                                                             foreach ($availableSize as $size) {
-                                                                if (isset($size) &&
-                                                                    (key($availableSize) !== 'merch_under_type_id') &&
-                                                                    (key($availableSize) !== 'id') &&
-                                                                    !($i % 2)) {?>
-                                                                    <th scope="col"><?= substr(key($availableSize), 0, -2); ?></th>
-                                                                    <?php
+                                                                if ((key($availableSize) !== 'merch_under_type_id')
+                                                                    && (key($availableSize) !== 'id')
+                                                                    && (($i % 3) == 0)) {
+                                                                    if ($size == null) {
+                                                                        $cFieldNullPointer += 1;
+                                                                    }
+                                                                    $cFieldPointerIndex += 1;
                                                                 }
                                                                 next($availableSize);
-                                                                $i += 1;
+                                                               $i += 1;
+                                                            }
+
+                                                            if ($cFieldNullPointer === $cFieldPointerIndex) {
+                                                                $cFieldDisplay = 'display: none;';
+                                                            } else {
+                                                                $cFieldDisplay = '';
                                                             }
                                                         }
-                                                    }
-                                                    ?>
-                                                </tr>
-                                                </thead>
-                                                <tbody style="<?= $availableSizesTableDisplay ?>;">
-                                                <tr>
-                                                    <th scope="row" >a (см)</th>
-                                                    <?php foreach ($availableSizes as $availableSize) {
-                                                        $i = 0;
-                                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
-                                                            foreach ($availableSize as $size) {
-                                                                if (isset($size) && !($i % 2) && !($i === 0) && !($i === 1)) { ?>
-                                                                    <th scope="col"><?= $size ?></th>
-                                                                    <?php
+                                                    } ?>
+
+                                                    <tr style="<?= $cFieldDisplay ?>">
+                                                        <th scope="row">c (см)</th>
+                                                        <?php foreach ($availableSizes as $availableSize) {
+                                                            if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                                $i = -1;
+                                                                foreach ($availableSize as $size) {
+                                                                    if (isset($size)
+                                                                        && (key($availableSize) !== 'merch_under_type_id')
+                                                                        && (key($availableSize) !== 'id')
+                                                                        && (($i % 3) == 0)) { ?>
+                                                                        <th scope="col"><?= $size ?></th>
+                                                                        <?php
+                                                                    }
+                                                                    next($availableSize);
+                                                                    $i += 1;
                                                                 }
-                                                                $i += 1;
                                                             }
                                                         }
-                                                    }
-                                                    ?>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">b (см)</th>
-                                                    <?php foreach ($availableSizes as $availableSize) {
-                                                        $i = 0;
-                                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
-                                                            foreach ($availableSize as $size) {
-                                                                if (isset($size) && ($i % 2) && !($i === 0) && !($i === 1)) { ?>
-                                                                    <th scope="col"><?= $size ?></th>
-                                                                    <?php
+                                                        ?>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="size-type-image">
+                                                <?php foreach ($availableSizes as $availableSize) {
+                                                    if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                        $i = -1;
+                                                        $cFieldNullPointer = 0;
+                                                        $cFieldPointerIndex = 0;
+                                                        foreach ($availableSize as $size) {
+                                                            if ((key($availableSize) !== 'merch_under_type_id')
+                                                                && (key($availableSize) !== 'id')
+                                                                && (($i % 3) == 0)) {
+                                                                if ($size == null) {
+                                                                    $cFieldNullPointer += 1;
                                                                 }
-                                                                $i += 1;
+                                                                $cFieldPointerIndex += 1;
                                                             }
+                                                            next($availableSize);
+                                                            $i += 1;
+                                                        }
+
+                                                        if ($cFieldNullPointer === $cFieldPointerIndex) { ?>
+                                                            <img src="img/BST/sizeTypes/abTypeImage.png" alt="abTypeImage">
+                                                            <?php
+                                                        } else { ?>
+                                                            <img src="img/BST/sizeTypes/abcTypeImage.png" style="margin-top: 20px;" alt="abcTypeImage">
+                                                        <?php
                                                         }
                                                     }
-                                                    ?>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                                } ?>
+                                            </div>
                                         </div>
                                         <div class="position-price">
                                             <h2>
