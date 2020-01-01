@@ -107,8 +107,8 @@ function insertUnit($type, $params)
     }
 
     if($type === 'size') {
-        $query = 'INSERT INTO `available_sizes`(`merch_under_type_id`, `S_a`, `S_b`, `M_a`, `M_b`, `L_a`, `L_b`, `XL_a`, `XL_b`, `XXL_a`, `XXL_b`, `3XL_a`, `3XL_b`, `4XL_a`, `4XL_b`, `5XL_a`, `5XL_b`) 
-        VALUES (:merch_under_type_id, :S_a, :S_b, :M_a, :M_b, :L_a, :L_b, :XL_a, :XL_b, :XXL_a, :XXL_b, :3XL_a, :3XL_b, :4XL_a, :4XL_b, :5XL_a, :5XL_b)';
+        $query = 'INSERT INTO `available_sizes`(`merch_under_type_id`, `S_a`, `S_b`, `S_c`, `M_a`, `M_b`, `M_c`, `L_a`, `L_b`, `L_c`, `XL_a`, `XL_b`, `XL_c`, `XXL_a`, `XXL_b`, `XXL_c`, `3XL_a`, `3XL_b`, `3XL_c`, `4XL_a`, `4XL_b`, `4XL_c`, `5XL_a`, `5XL_b`, `5XL_c`) 
+        VALUES (:merch_under_type_id, :S_a, :S_b, :S_c, :M_a, :M_b, :M_c, :L_a, :L_b, :L_c, :XL_a, :XL_b, :XL_c, :XXL_a, :XXL_b, :XXL_c, :3XL_a, :3XL_b, :3XL_c, :4XL_a, :4XL_b, :4XL_c, :5XL_a, :5XL_b, :5XL_c)';
     }
 
     return performQuery($query, $params) ? true : false;

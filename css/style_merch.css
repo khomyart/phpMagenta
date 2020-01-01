@@ -181,10 +181,17 @@ h2 {
 
 .position-price {
   font-weight: normal;
+  margin-top: 5px;
   margin-bottom: 15px;
 }
 
 .table td,
 .table th {
   border-style: none;
+}
+
+.size-type-image {
+  margin-top: 55px;
+  margin-left: -88px;
+  padding-right: 32.39px;
 }
