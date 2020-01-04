@@ -39,7 +39,12 @@ if ($uploadOk == 0) {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
         echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
         var_dump($_FILES);
-        header ('Location: ../merch.php?newMerchUnderType=submit&fileLocation='.substr($target_file, 2));
+        if ($_POST["submit"]) {
+            header ('Location: ../merch.php?newMerchUnderType=submit&fileLocation='.substr($target_file, 2).'&MerchUnderTypeEdit='.$_POST["submit"]);
+        } else {
+            header ('Location: ../merch.php?newMerchUnderType=submit&fileLocation='.substr($target_file, 2));
+        }
+
     } else {
         echo "Sorry, there was an error uploading your file.";
     }

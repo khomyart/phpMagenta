@@ -10,9 +10,6 @@ header("Content-Type: text/html; charset=UTF-8");
 $searchValue = '';
 $availableColours = getListOfAvailableColors();
 
-//echo $_GET['fileLocation'];
-//var_dump($_GET);
-
 /* Searching algorithm */
 if (isset($_REQUEST['isSearch']) && ($_REQUEST['isSearch'] == 'Y')) {
     $searchValue = $_REQUEST['search'];
@@ -54,11 +51,6 @@ if (isset($_GET['MerchTypeDelete'])) {
 $targetFile = $_GET['fileLocation'];
 $imgMerchUnderTypeZIndex = -1;
 $addingImageInputType = '';
-
-if ($targetFile) {
-    $imgMerchUnderTypeZIndex = 4000;
-    $addingImageInputType = 'hidden';
-}
 
 /* Performs merch under type creating when all fields are filled and appropriate button has been pressed */
 if (isset($_GET['newMerchUnderTypeSave'])) {
@@ -120,6 +112,114 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
 
     insertUnit('size', $availableSizeParams);
     header('Location: merch.php');
+}
+var_dump($_GET);
+/* Performs merch under type edit with proper ID */
+if (isset($_GET['MerchUnderTypeEdit'])) {
+    $merchUnderTypeQuery = 'SELECT * FROM `merch_under_types` as m 
+                            LEFT JOIN `available_sizes` as a ON m.id = a.merch_under_type_id 
+                            LEFT JOIN `merch_types` as mt ON m.merch_type_id = mt.id 
+                            WHERE m.id = :merchUnderTypeId;';
+
+    $merchUnderTypeParam = [
+        'merchUnderTypeId' => $_GET['MerchUnderTypeEdit'],
+    ];
+    $merchUnderTypeEditGeneralInfoAndSizes = getRow($merchUnderTypeQuery, $merchUnderTypeParam);
+
+    $addingImageInputType = 'hidden';
+
+    $merchUnderTypeColorQuery = 'SELECT `color_id` FROM `merch_under_types_color` WHERE `merch_under_type_id` = :merchUnderTypeId;';
+    $merchUnderTypeEditSelectedColors = getAllRows($merchUnderTypeColorQuery, $merchUnderTypeParam);
+    foreach ($merchUnderTypeEditSelectedColors as &$merchUnderTypeEditSelectedColor) {
+        $merchUnderTypeEditSelectedColor = $merchUnderTypeEditSelectedColor['color_id'];
+    }
+};
+/*Update merch subtype block*/
+if (isset($_GET['existedMerchUnderTypeSave'])) {
+
+    $merchUnderTypeUpdateGeneralInfoQuery = 'UPDATE `merch_under_types` as m 
+                                                LEFT JOIN `available_sizes` as a ON m.id = a.merch_under_type_id 
+                                                SET 
+                                                m.merch_type_id = :merchTypeId,
+                                                m.merch_under_type_name = :merchUnderTypeName,
+                                                m.img = :img,
+                                                m.description = :description,
+                                                m.price = :price,
+                                                a.S_a = :S_b, a.S_b = :S_b, a.S_c = :S_c, 
+                                                a.M_a = :M_a, a.M_b = :M_b, a.M_c = :M_c, 
+                                                a.L_a = :L_a, a.L_b = :L_b, a.L_c = :L_c, 
+                                                a.XL_a = :XL_a, a.XL_b = :XL_b, a.XL_c = :XL_c, 
+                                                a.XXL_a = :XXL_a, a.XXL_b = :XXL_b, a.XXL_c = :XXL_c, 
+                                                a.3XL_a = :3XL_a, a.3XL_b = :3XL_b, a.3XL_c = :3XL_c, 
+                                                a.4XL_a = :4XL_a, a.4XL_b = :4XL_b, a.4XL_c = :4XL_c, 
+                                                a.5XL_a = :5XL_a, a.5XL_b = :5XL_b, a.5XL_c = :5XL_c
+                                                WHERE m.id = :merchUnderTypeId';
+
+    $merchUnderTypeUpdateGeneralInfoParams = [
+        'merchUnderTypeId' => $_GET['existedMerchUnderTypeSave'],
+        'merchTypeId' => $_GET['existedMerchUnderType']['listOfTypes'], /* merchType ID */
+        'merchUnderTypeName' => $_GET['existedMerchUnderType']['header'],
+        'img' => $_GET['existedMerchUnderType']['img'],
+        'description' => nl2br($_GET['existedMerchUnderType']['desc']),
+        'price' => $_GET['existedMerchUnderType']['price'],
+        'S_a' => $_GET['existedMerchUnderTypeAvailableSizes']['s_a'],
+        'S_b' => $_GET['existedMerchUnderTypeAvailableSizes']['s_b'],
+        'S_c' => $_GET['existedMerchUnderTypeAvailableSizes']['s_c'],
+        'M_a' => $_GET['existedMerchUnderTypeAvailableSizes']['m_a'],
+        'M_b' => $_GET['existedMerchUnderTypeAvailableSizes']['m_b'],
+        'M_c' => $_GET['existedMerchUnderTypeAvailableSizes']['m_c'],
+        'L_a' => $_GET['existedMerchUnderTypeAvailableSizes']['l_a'],
+        'L_b' => $_GET['existedMerchUnderTypeAvailableSizes']['l_b'],
+        'L_c' => $_GET['existedMerchUnderTypeAvailableSizes']['l_c'],
+        'XL_a' => $_GET['existedMerchUnderTypeAvailableSizes']['xl_a'],
+        'XL_b' => $_GET['existedMerchUnderTypeAvailableSizes']['xl_b'],
+        'XL_c' => $_GET['existedMerchUnderTypeAvailableSizes']['xl_c'],
+        'XXL_a' => $_GET['existedMerchUnderTypeAvailableSizes']['xxl_a'],
+        'XXL_b' =>  $_GET['existedMerchUnderTypeAvailableSizes']['xxl_b'],
+        'XXL_c' =>  $_GET['existedMerchUnderTypeAvailableSizes']['xxl_c'],
+        '3XL_a' =>  $_GET['existedMerchUnderTypeAvailableSizes']['3xl_a'],
+        '3XL_b' => $_GET['existedMerchUnderTypeAvailableSizes']['3xl_b'],
+        '3XL_c' =>  $_GET['existedMerchUnderTypeAvailableSizes']['3xl_c'],
+        '4XL_a' => $_GET['existedMerchUnderTypeAvailableSizes']['4xl_a'],
+        '4XL_b' => $_GET['existedMerchUnderTypeAvailableSizes']['4xl_b'],
+        '4XL_c' => $_GET['existedMerchUnderTypeAvailableSizes']['4xl_c'],
+        '5XL_a' => $_GET['existedMerchUnderTypeAvailableSizes']['5xl_a'],
+        '5XL_b' => $_GET['existedMerchUnderTypeAvailableSizes']['5xl_b'],
+        '5XL_c' => $_GET['existedMerchUnderTypeAvailableSizes']['5xl_c'],
+    ];
+
+    foreach ($merchUnderTypeUpdateGeneralInfoParams as &$merchUnderTypeUpdateGeneralInfoParam) {
+        if (empty($merchUnderTypeUpdateGeneralInfoParam)) {
+            $merchUnderTypeUpdateGeneralInfoParam = NULL;
+        }
+    }
+
+    $merchUnderTypeUpdateGeneralInfoColorParams = ['merchUnderTypeId' => $_GET['existedMerchUnderTypeSave']];
+    removeUnit('colors', $merchUnderTypeUpdateGeneralInfoColorParams);
+
+    foreach ($_GET['existedMerchUnderTypeColours'] as $colour) {
+        $addColourParams = [
+            'merchUnderTypeId' => $_GET['existedMerchUnderTypeSave'],
+            'colorId' => $colour,
+        ];
+
+        insertUnit('merchUnderTypeColor', $addColourParams);
+    }
+
+    if (performQuery($merchUnderTypeUpdateGeneralInfoQuery, $merchUnderTypeUpdateGeneralInfoParams)) {
+        //header('Location: merch.php');
+    } else {
+        echo 'gg wp suka';
+    }
+
+}
+
+if (empty($targetFile)) {
+    $targetFile = $merchUnderTypeEditGeneralInfoAndSizes['img'];
+    $merchUnderTypeEditImage = $merchUnderTypeEditGeneralInfoAndSizes['img'];
+} else {
+    $imgMerchUnderTypeZIndex = 4000;
+    $merchUnderTypeEditImage = $targetFile;
 }
 
 /* Performs merch under type deleting when appropriate button has been pressed */
@@ -197,6 +297,207 @@ include './templates/header.php'; ?>
 
             <br />
             <form action="" method="get">
+
+                <?php
+                if (isset($_GET['MerchUnderTypeEdit'])) {
+                    unset($_GET); ?>
+                    <!--MerchUnderTypeEdit-->
+                    <div class="full-length-back position-relative" style="margin-top: 30px;">
+                        <div class="dropdown position-absolute"
+                             style="margin-top:-25px; top:40px; right: 15px;">
+                            <button class="btn btn-info dropdown-toggle"
+                                    type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    style="height: 40px;"
+                            >
+                                Опції
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <button class="dropdown-item" name="existedMerchUnderTypeSave"
+                                        value="<?= $merchUnderTypeEditGeneralInfoAndSizes['merch_under_type_id'] ?>">
+                                    Зберегти
+                                </button>
+                                <button class="dropdown-item" name="cancel"
+                                        value="Submit">
+                                    Відмінити
+                                </button>
+                            </div>
+                        </div>
+                        <div class="input-group mt-4 col-6">
+                            <div class="custom-file d-flex justify-content-between">
+                                <input type="file" class="uploading-image-input" form="uploadingFormFile" name="fileToUpload" id="fileToUpload">
+                                <button class="uploading-button-input" type="submit" form="uploadingFormFile" name="submit"
+                                        value="<?= $merchUnderTypeEditGeneralInfoAndSizes['merch_under_type_id'] ?>">
+                                    Завантажити
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-top:30px;">
+                            <select class="form-control" name="existedMerchUnderType[listOfTypes]">
+                                <option value="">
+                                    Вид товару
+                                </option>
+                                <?php
+                                foreach ($positions as $position) {
+                                    if ($merchUnderTypeEditGeneralInfoAndSizes['merch_type_name']==$position['merch_type_name']) {?>
+                                        <option selected value="<?= $position['id'] ?>">
+                                            <?= $position['merch_type_name'] ?>
+                                        </option>
+                                    <?php } else { ?>
+                                        <option value="<?= $position['id'] ?>">
+                                            <?= $position['merch_type_name'] ?>
+                                        </option>
+                                    <?php
+                                    }
+                                } ?>
+                            </select>
+                        </div>
+                        <div class="info-container">
+                            <div class="info-container-img d-flex flex-column justify-content-center align-items-center">
+                                <img src="<?= $merchUnderTypeEditImage ?>" style="z-index: <?= $imgMerchUnderTypeZIndex ?>;" alt="">
+                                <input type="<?= $addingImageInputType ?>" class="form-control" name="existedMerchUnderType[img]"
+                                       style="width: 100%;" value="<?= $merchUnderTypeEditImage ?>">
+                            </div>
+                            <div class="info-container-text">
+                                <div class="info-container-text-header d-flex flex-column justify-content-center align-items-center">
+                                    <label>Заголовок</label>
+                                    <h2>
+                                        <input class="form-control" style="width: 350px;" name="existedMerchUnderType[header]"
+                                               value="<?= $merchUnderTypeEditGeneralInfoAndSizes['merch_under_type_name'] ?>">
+                                    </h2>
+                                </div>
+                                <div class="info-container-text-desc d-flex flex-column justify-content-center align-items-center">
+                                    <label>Опис</label>
+                                    <textarea class=" d-inline-block form-control" name="existedMerchUnderType[desc]"
+                                              style="height: 160px; width: 350px;"><?= $merchUnderTypeEditGeneralInfoAndSizes['description'] ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="color-block-holder">
+                            <?php
+                            $i=0;
+                            foreach ($availableColours as $availableColour) {?>
+                                <div style="margin: 0px 25px 15px 25px;">
+                                    <?php
+                                    $selectedColorKey = array_search($availableColour['id'], $merchUnderTypeEditSelectedColors);
+                                    if (is_int($selectedColorKey)) { ?>
+                                        <input class="form-check-input color_checkbox" type="checkbox" id="<?= $i ?>"
+                                               checked name="existedMerchUnderTypeColours[<?= $i ?>]"
+                                               value="<?=$availableColour['id']?>">
+                                        <?php
+                                    } else { ?>
+                                        <input class="form-check-input color_checkbox" type="checkbox" id="<?= $i ?>"
+                                               name="existedMerchUnderTypeColours[<?= $i ?>]"
+                                               value="<?=$availableColour['id']?>">
+                                    <?php
+                                    }?>
+                                    <label class="form-check-label color_checkbox_label" for="<?= $i ?>">
+                                        <div class="color-block" style="
+                                                background-color: <?=$availableColour['color']?>;
+                                                margin-left: 0px;"
+                                             data-toggle="tooltip" data-placement="top"
+                                             title="<?=$availableColour['description']?>">
+                                            <div class="color-block-text" style="
+                                                        color: <?=$availableColour['textColor']?>">
+                                                <?=$availableColour['article']?>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <?php
+                                /* Making unique id every foreach iteration to prevent checkboxes problems */
+                                $i += 1;
+                            } ?>
+                        </div>
+                        <div class="size-table-div">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr >
+                                    <th scope="col"></th>
+                                    <th scope="col">S</th>
+                                    <th scope="col">M</th>
+                                    <th scope="col">L</th>
+                                    <th scope="col">XL</th>
+                                    <th scope="col">XXL</th>
+                                    <th scope="col">3XL</th>
+                                    <th scope="col">4XL</th>
+                                    <th scope="col">5XL</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">a (см)</th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[s_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['S_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[m_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['M_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[l_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['L_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[xl_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['XL_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[xxl_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['XXL_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[3xl_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['3XL_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[4xl_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['4XL_a'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[5xl_a]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['5XL_a'] ?>"></th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">b (см)</th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[s_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['S_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[m_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['M_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[l_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['L_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[xl_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['XL_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[xxl_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['XXL_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[3xl_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['3XL_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[4xl_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['4XL_b'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[5xl_b]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['5XL_b'] ?>"></th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">c (см)</th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[s_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['S_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[m_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['M_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[l_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['L_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[xl_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['XL_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[xxl_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['XXL_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[3xl_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['3XL_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[4xl_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['4XL_c'] ?>"></th>
+                                    <th scope="row"><input style="width: 40px;" type="number" name="existedMerchUnderTypeAvailableSizes[5xl_c]"
+                                                           value="<?= $merchUnderTypeEditGeneralInfoAndSizes['5XL_c'] ?>"></th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="position-price">
+                            <h2>
+                                Ціна: <input class="form-control" type="number" name="existedMerchUnderType[price]" value="<?= $merchUnderTypeEditGeneralInfoAndSizes['price'] ?>"> грн
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="space-between-lots"></div>
+                    <!--MerchUnderTypeEdit close-->
+                <?php
+                } ?>
+
                 <?php
                 if (isset($_GET['newMerchUnderType'])) {
                     unset($_GET); ?>

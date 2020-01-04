@@ -137,12 +137,16 @@ function updateUnit($type, $params) {
  * @return bool
  */
 function removeUnit($type, $params) {
-    if($type === 'merchType') {
+    if ($type === 'merchType') {
         $query = 'DELETE from `merch_types` WHERE `id` = :id;';
     }
 
-    if($type === 'merchUnderType') {
+    if ($type === 'merchUnderType') {
         $query = 'DELETE from `merch_under_types` WHERE `id` = :id;';
+    }
+
+    if ($type === 'colors') {
+        $query = 'DELETE from `merch_under_types_color` WHERE `merch_under_type_id` = :merchUnderTypeId;';
     }
 
     return performQuery($query, $params) ? true : false;
