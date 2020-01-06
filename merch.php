@@ -2,11 +2,6 @@
 include './imports.php';
 header("Content-Type: text/html; charset=UTF-8");
 
-/*
- * img/BST/sizeTypes/abTypeImage.png
- * img/BST/sizeTypes/abcTypeImage.png
- * */
-
 $searchValue = '';
 $availableColours = getListOfAvailableColors();
 
@@ -113,7 +108,7 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
     insertUnit('size', $availableSizeParams);
     header('Location: merch.php');
 }
-var_dump($_GET);
+
 /* Performs merch under type edit with proper ID */
 if (isset($_GET['MerchUnderTypeEdit'])) {
     $merchUnderTypeQuery = 'SELECT * FROM `merch_under_types` as m 
