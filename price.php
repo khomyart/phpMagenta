@@ -1,525 +1,38 @@
+<?php
+include './imports.php';
+
+/* Merch types */
+$positions = getListOfMerchTypes($searchValue);
+/* Merch under types */
+$underPositions = getListOfMerchUnderTypes($searchValue);
+/* Colors for particular under types (under positions) */
+$colourPacks = getListOfColourPack($searchValue);
+/* Sizes for particular under types (under positions) */
+$availableSizes = getListOfAvailableSizes($searchValue);
+
+?>
+
 <!DOCTYPE html>
 <html>
   <head lang="en">
     <meta charset="UTF-8" />
     <title>"Magenta Print|Price list"</title>
-    <link href="css/style_price.css" rel="stylesheet" />
+      <!-- Required meta tags -->
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link href="css/style_price.css" rel="stylesheet" />
+      <!-- Bootstrap CSS
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"> -->
     <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.css" />
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      @media (max-width: 1550px) {
-        .navbar-site-nav-items {
-          padding: 0 1.8rem;
-          font-size: 1.1rem;
-        }
 
-        .navbar-site-logos-items {
-          padding: 0 2rem;
-          font-size: 1.1rem;
-        }
+    <?php
+    include './css/price_adaptive_styles.php';
+    ?>
 
-        .info-container {
-          width: 95%;
-        }
-      }
-
-      @media (max-width: 1350px) {
-        .container {
-          width: 90vw;
-        }
-
-        .navbar-site-nav-items {
-          padding: 0 1rem;
-          font-size: 1.1rem;
-        }
-
-        .navbar-site-logos-items {
-          padding: 0 0.8rem;
-          font-size: 1.1rem;
-        }
-
-        .info-container {
-          width: 95%;
-        }
-
-        .magenta-under-logo {
-          flex-wrap: wrap;
-        }
-      }
-
-      @media (max-width: 1000px) {
-        .menu-logo {
-          left: 0.5rem;
-        }
-
-        .container {
-          width: 100%;
-        }
-
-        .navbar-site-nav-items {
-          padding: 0 0.8rem;
-          font-size: 1.1rem;
-        }
-
-        .navbar-site-logos-items {
-          padding: 0 1rem;
-          font-size: 1.1rem;
-        }
-
-        .page-logo {
-          width: 98%;
-          min-height: 30vh;
-        }
-
-        .info-container {
-          width: 95%;
-        }
-      }
-
-      @media (max-width: 840px) {
-        .menu-logo {
-          left: 0.1rem;
-        }
-
-        .container {
-          width: 100%;
-        }
-
-        .navbar-site-nav-items {
-          padding: 0 0.5rem;
-          font-size: 1.1rem;
-          display: inline-block;
-        }
-
-        .navbar-site-logos-items {
-          padding: 0 0.5rem;
-          font-size: 1.1rem;
-          display: inline-block;
-        }
-
-        .page-logo {
-          width: 98%;
-          min-height: 30vh;
-        }
-
-        .page-logo-image {
-          transform: translate(-50%, -49%) scale(0.6);
-        }
-
-        .full-length-back {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          justify-content: center;
-          align-items: center;
-          border-radius: 10px;
-        }
-
-        .w {
-          background-color: white;
-        }
-
-        .g {
-          background-color: rgba(128, 128, 128, 0.096);
-        }
-
-        .info-container {
-          padding: 1rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 300px;
-          width: 95%;
-        }
-
-        .info-container-text {
-          align-items: center;
-        }
-
-        .info-container-img {
-          margin: 0rem;
-          height: 100%;
-          width: 50%;
-          border-radius: 10px;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .info-container-img img {
-          min-width: 100%;
-          min-height: 100%;
-          overflow: hidden;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) scale(0.7);
-        }
-
-        .info-container-text {
-          padding: 0 2rem;
-          width: 50%;
-          text-align: justify;
-        }
-
-        .man-woman-container {
-          padding-bottom: 1rem;
-          display: flex;
-          justify-content: space-between;
-          align-items: stretch;
-          flex-wrap: wrap;
-          width: 100%;
-          min-height: 53vh;
-          max-height: 85vh;
-          box-sizing: border-box;
-          margin-top: 0rem;
-        }
-
-        .man {
-          width: 32%;
-          min-width: 20%;
-          height: 23vh;
-          flex-grow: 0;
-        }
-        .woman {
-          width: 32%;
-          min-width: 20%;
-          height: 23vh;
-          flex-grow: 0;
-        }
-
-        .child {
-          width: 32%;
-          min-width: 20%;
-          height: 23vh;
-          flex-grow: 0;
-        }
-
-        .hat {
-          min-width: 48.5%;
-          height: 23vh;
-          flex-grow: 0;
-        }
-
-        .bag {
-          min-width: 48.5%;
-          height: 23vh;
-          flex-grow: 0;
-        }
-      }
-
-      @media (max-width: 755px) {
-        html {
-          font-size: 15px;
-        }
-
-        .container {
-          width: 100%;
-        }
-        .relative-for-menu {
-          top: 1rem;
-          transition: all 0.25s ease-in-out;
-        }
-
-        .relative-for-menu.relative-for-menu-activated {
-          top: 0rem;
-        }
-
-        .menu-label {
-          transform: scale(0);
-        }
-        .menu-label.menu-label-activated {
-          transform: scale(0);
-        }
-
-        .menu-logo {
-          left: 1rem;
-          width: 4rem;
-          height: 4rem;
-          background-color: #f3f3f3;
-          position: absolute;
-          cursor: pointer;
-          display: flex;
-          transition: all 0.5s ease-in-out;
-          transform: rotate(45deg);
-          justify-content: center;
-          align-items: center;
-          box-shadow: 0 0 10px 2px rgb(128, 0, 128);
-        }
-
-        .menu-logo-img {
-          width: 2.8rem;
-          height: 2.5rem;
-          transition: all 1s ease-in-out;
-          transform: rotate(-45deg);
-        }
-
-        .menu-logo.activated-logo {
-          margin-left: -13px;
-          transform: rotate(-180deg);
-          box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0);
-        }
-
-        .menu-logo-img.activated-menu-image {
-          width: 3rem;
-          height: 2.7rem;
-          transform: rotate(-180deg);
-        }
-
-        .navbar {
-          margin-left: 0px;
-          width: 0%;
-          height: 4rem;
-          background-color: #f3f3f3;
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          transition: all 0.5s ease-in-out;
-          margin-left: 0px;
-        }
-
-        .navbar.activated {
-          transition-delay: 0.5s;
-          width: 100%;
-          margin-left: 0px;
-        }
-
-        .navbar-left-padding {
-          transition: all 0.5s ease-in-out;
-          width: 0%;
-        }
-
-        .navbar-left-padding.navbar-left-padding-activated {
-          width: 10%;
-        }
-
-        .navbar.activated {
-          height: 9rem;
-          margin-left: 0px;
-          width: 100%;
-        }
-
-        .menu-center {
-          height: 0%;
-          transition: all 0.5s ease-in-out;
-          border-left: 2px solid rgba(128, 0, 128, 0);
-        }
-
-        .navbar-site-nav-parent-div {
-          width: 40%;
-        }
-
-        .navbar-site-nav-items {
-          padding: 0.2rem 0.5rem;
-          display: block;
-          font-size: 1.2rem;
-          transform: scale(0);
-        }
-
-        .navbar-site-logos-items {
-          display: block;
-          padding: 0.2rem 0.5rem;
-          font-size: 1.2rem;
-          transform: scale(0);
-        }
-
-        .page-logo {
-          width: 98%;
-          min-height: 32vh;
-        }
-
-        .page-logo-image {
-          transform: translate(-50%, -45%) scale(0.6);
-        }
-
-        .content-header {
-          padding: 1.5rem 0 0 0;
-          font-weight: normal;
-          margin-bottom: -25px;
-        }
-
-        .content-header-add-margin {
-          margin-bottom: 1.5rem;
-        }
-
-        .full-length-back {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          height: 100%;
-          justify-content: center;
-          align-items: center;
-          border-radius: 10px;
-        }
-
-        .w {
-          background-color: white;
-        }
-
-        .g {
-          background-color: rgba(128, 128, 128, 0.096);
-        }
-
-        .info-container {
-          padding: 0rem;
-          display: flex;
-          flex-direction: column;
-          width: 93%;
-          height: auto;
-        }
-
-        .info-container-img {
-          width: 97vw;
-          height: 12.5rem;
-          border-radius: 10px;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .info-container-img img {
-          min-width: 100%;
-          min-height: 100%;
-          overflow: hidden;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) scale(0.5);
-        }
-
-        .info-container-text {
-          padding: 0 0rem;
-          width: 98%;
-          text-align: justify;
-        }
-
-        .info-container-text-header {
-          padding-top: 1rem;
-        }
-
-        .info-container-text-desc {
-          padding-top: 1rem;
-          overflow: auto;
-          font-size: 1.15rem;
-          height: 80%;
-        }
-
-        .man-woman-container {
-          padding: 0rem;
-          display: flex;
-          justify-content: center;
-          align-items: stretch;
-          flex-wrap: wrap;
-          width: 100%;
-          min-height: 170vh;
-        }
-
-        .man {
-          width: 98%;
-          min-width: 310px;
-          height: 30vh;
-          flex-grow: 0;
-        }
-
-        .man img {
-          transform: translate(-50%, -48%) scale(0.21);
-        }
-
-        .man:hover img {
-          transform: translate(-50%, -48%) scale(0.23);
-        }
-        .woman {
-          width: 98%;
-          min-width: 310px;
-          height: 30vh;
-          flex-grow: 0;
-        }
-
-        .child {
-          width: 98%;
-          min-width: 310px;
-          height: 30vh;
-          flex-grow: 0;
-        }
-
-        .hat {
-          width: 98%;
-          min-width: 310px;
-          height: 30vh;
-          flex-grow: 0;
-        }
-
-        .bag {
-          width: 98%;
-          min-width: 310px;
-          height: 30vh;
-          flex-grow: 0;
-        }
-
-        .footer {
-          font-size: 1.15rem;
-        }
-      }
-
-      @media (min-height: 1100px) {
-        .page-logo {
-          width: 98%;
-          min-height: 25vh;
-        }
-        .page-logo-image {
-          transform: translate(-50%, -40%) scale(1);
-        }
-
-        .info-container {
-          width: 95%;
-        }
-
-        .man-woman-container {
-          padding-bottom: 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: stretch;
-          flex-wrap: wrap;
-          width: 100%;
-          min-height: 50vh;
-          box-sizing: border-box;
-          margin-top: 0.5rem;
-        }
-
-        .man {
-          width: 32%;
-          min-width: 20%;
-          height: 22vh;
-          flex-grow: 0;
-        }
-        .woman {
-          width: 32%;
-          min-width: 20%;
-          height: 22vh;
-          flex-grow: 0;
-        }
-
-        .child {
-          width: 32%;
-          min-width: 20%;
-          height: 22vh;
-          flex-grow: 0;
-        }
-
-        .hat {
-          min-width: 48.5%;
-          height: 22vh;
-          flex-grow: 0;
-        }
-
-        .bag {
-          min-width: 48.5%;
-          height: 22vh;
-          flex-grow: 0;
-        }
-      }
-      /*LOGO*/
-    </style>
   </head>
   <body>
     <div class="container">
@@ -559,7 +72,7 @@
           <div class="navbar-site-nav-parent-div">
             <ul class="navbar-site-nav">
               <li class="navbar-site-nav-items">
-                <a href="index.html">Головна</a>
+                <a href="index.php">Головна</a>
                 <div class="menu_underlines_navs"></div>
               </li>
               <li class="navbar-site-nav-items">
@@ -567,7 +80,7 @@
                 <div class="menu_underlines_navs"></div>
               </li>
               <li class="navbar-site-nav-items">
-                <a href="price.html">Продаж</a>
+                <a href="price.php">Продаж</a>
                 <div class="menu_underlines_navs"></div>
               </li>
               <li class="navbar-site-nav-items">
@@ -607,46 +120,233 @@
       <!--MENU-->
 
       <!--CONTENT-->
-      <div class="content-header">
-        <h2>Чоловічий одяг</h2>
-      </div>
-      <div class="space-between-lots">
-        <div class="separator"></div>
-      </div>
-      <div class="full-length-back">
-        <div class="info-container">
-          <div class="info-container-img">
-            <img src="/img/BST/flexsoft/best-heat-transfer-vinyl.jpg" alt="" />
-          </div>
-          <div class="info-container-text">
-            <div class="info-container-text-header">
-              <h2>
-                ФУТБОЛКИ
-              </h2>
+        <?php
+        foreach ($positions as $position) {?>
+            <div class="content-header">
+                <h2>
+                    <?= $position['merch_type_name'] ?>
+                </h2>
             </div>
-            <div class="info-container-text-desc">
-              Виробник: Fruit Of The Loom
-              <br />
-              <br />
-              Модель: 61-036-0 Valueweight T
-              <br />
-              <br />
-              Матеріал: 100% Бавовна нитка Belcoro®
-              <br />
-              <br />
-              Щільність: Біла – 160 г/м²,Кольорова – 165 г/м²
-              <br />
-              <br />
-              Стильна чоловіча футболка прямого покрою, яка підійде для
-              будь-якої фігури. Дозволяє добитись високої якості зображення при
-              усіх видах друку.
-              <br />
+            <div class="space-between-lots">
+                <div class="separator"></div>
             </div>
-          </div>
-        </div>
-        <div class="info-container-under-img-and-desc"></div>
-      </div>
-      <div style="height: 30px;"></div>
+            <?php
+            foreach ($underPositions as $underPosition) {
+                if ($underPosition['merch_type_id'] === $position['id']) {?>
+                <div class="full-length-back w">
+                    <div class="info-container">
+                        <div class="info-container-img">
+                            <img src="<?= $underPosition['img'] ?>" alt="">
+                        </div>
+                        <div class="info-container-text">
+                            <div class="info-container-text-header">
+                                <h2>
+                                    <?= $underPosition['merch_under_type_name'] ?>
+                                </h2>
+                            </div>
+                            <div class="info-container-text-desc">
+                                <?= $underPosition['description'] ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-block-holder">
+                        <?php foreach ($colourPacks as $colour) {
+                            if ($underPosition['id'] === $colour['merch_under_type_id']) { ?>
+                                <div class="color-block"
+                                     style="background-color: <?= $colour['color'] ?>;"
+                                     data-toggle="tooltip" data-placement="top"
+                                     title="<?= $colour['description'] ?>">
+                                    <div class="color-block-text" style="color: <?= $colour['textColor'] ?>">
+                                        <?= $colour['article'] ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                        } ?>
+                    </div>
+                    <?php
+                    foreach ($availableSizes as $availableSize) {
+                    if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                    $merchUnderTypeAvailableSizeDisplayBlock = 'flex';
+                    $sizeTableNullPointer = 2;
+                    $sizeTablePointerIndex = 0;
+
+                    foreach ($availableSize as $size) {
+                        if ((key($availableSize) !== 'merch_under_type_id')
+                            && (key($availableSize) !== 'id')) {
+                            if ($size == null) {
+                                $sizeTableNullPointer += 1;
+                            }
+                        }
+                        next($availableSize);
+                        $sizeTablePointerIndex += 1;
+                    }
+
+                    if ($sizeTableNullPointer === $sizeTablePointerIndex) {
+                        $merchUnderTypeAvailableSizeDisplayBlock = 'none';
+                    } ?>
+                    <div class="size-table-div" style="display: <?= $merchUnderTypeAvailableSizeDisplayBlock ?>;">
+                        <?php
+                        }
+                        } ?>
+                        <div class="size-table-holder">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <?php foreach ($availableSizes as $availableSize) {
+                                            /* Counter which allows do proper sizes display control, used in %2(B), %3(C) */
+                                            $i = 1;
+                                            if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                                foreach ($availableSize as $size) {
+                                                    if (isset($size)
+                                                        && (key($availableSize) !== 'merch_under_type_id')
+                                                        && (key($availableSize) !== 'id')
+                                                        && (($i % 3) == 0)) {?>
+                                                        <th scope="col"><?= substr(key($availableSize), 0, -2); ?></th>
+                                                        <?php
+                                                    }
+                                                    next($availableSize);
+                                                    $i += 1;
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row" >A,см</th>
+                                    <?php foreach ($availableSizes as $availableSize) {
+                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                            $i = 1;
+                                            foreach ($availableSize as $size) {
+                                                if (isset($size)
+                                                    && (key($availableSize) !== 'merch_under_type_id')
+                                                    && (key($availableSize) !== 'id')
+                                                    && (($i % 3) == 0))  { ?>
+                                                    <th scope="col"><?= $size ?></th>
+                                                    <?php
+                                                }
+                                                next($availableSize);
+                                                $i += 1;
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </tr>
+                                <tr>
+                                    <th scope="row">B,см</th>
+                                    <?php foreach ($availableSizes as $availableSize) {
+                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                            $i = 0;
+                                            foreach ($availableSize as $size) {
+                                                if (isset($size)
+                                                    && (key($availableSize) !== 'merch_under_type_id')
+                                                    && (key($availableSize) !== 'id')
+                                                    && (($i % 3) == 0)) { ?>
+                                                    <th scope="col"><?= $size ?></th>
+                                                    <?php
+                                                }
+                                                next($availableSize);
+                                                $i += 1;
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </tr>
+
+                                <?php foreach ($availableSizes as $availableSize) {
+                                    /*if C field is not empty - show it, else hide*/
+                                    if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                        $i = -1;
+                                        $cFieldNullPointer = 0;
+                                        $cFieldPointerIndex = 0;
+                                        foreach ($availableSize as $size) {
+                                            if ((key($availableSize) !== 'merch_under_type_id')
+                                                && (key($availableSize) !== 'id')
+                                                && (($i % 3) == 0)) {
+                                                if ($size == null) {
+                                                    $cFieldNullPointer += 1;
+                                                }
+                                                $cFieldPointerIndex += 1;
+                                            }
+                                            next($availableSize);
+                                            $i += 1;
+                                        }
+
+                                        if ($cFieldNullPointer === $cFieldPointerIndex) {
+                                            $cFieldDisplay = 'display: none;';
+                                        } else {
+                                            $cFieldDisplay = '';
+                                        }
+                                    }
+                                } ?>
+
+                                <tr style="<?= $cFieldDisplay ?>">
+                                    <th scope="row">C,см</th>
+                                    <?php foreach ($availableSizes as $availableSize) {
+                                        if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                            $i = -1;
+                                            foreach ($availableSize as $size) {
+                                                if (isset($size)
+                                                    && (key($availableSize) !== 'merch_under_type_id')
+                                                    && (key($availableSize) !== 'id')
+                                                    && (($i % 3) == 0)) { ?>
+                                                    <th scope="col"><?= $size ?></th>
+                                                    <?php
+                                                }
+                                                next($availableSize);
+                                                $i += 1;
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="size-type-image">
+                            <?php foreach ($availableSizes as $availableSize) {
+                                if ($underPosition['id'] == $availableSize['merch_under_type_id']) {
+                                    $i = -1;
+                                    $cFieldNullPointer = 0;
+                                    $cFieldPointerIndex = 0;
+                                    foreach ($availableSize as $size) {
+                                        if ((key($availableSize) !== 'merch_under_type_id')
+                                            && (key($availableSize) !== 'id')
+                                            && (($i % 3) == 0)) {
+                                            if ($size == null) {
+                                                $cFieldNullPointer += 1;
+                                            }
+                                            $cFieldPointerIndex += 1;
+                                        }
+                                        next($availableSize);
+                                        $i += 1;
+                                    }
+
+                                    if ($cFieldNullPointer === $cFieldPointerIndex) { ?>
+                                        <img style="margin-top: -19px;" src="img/BST/sizeTypes/abTypeImage.png" alt="abTypeImage">
+                                        <?php
+                                    } else { ?>
+                                        <img src="img/BST/sizeTypes/abcTypeImage.png" alt="abcTypeImage">
+                                        <?php
+                                    }
+                                }
+                            } ?>
+                        </div>
+                    </div>
+                    <div class="position-price">
+                        <h2>
+                            Ціна: <?= $underPosition['price'] ?> грн
+                        </h2>
+                    </div>
+                </div>
+                <div class="space-between-lots"></div>
+                <?php
+                }
+            }
+        }?>
       <!--CONTENT-->
 
       <div class="footer">
@@ -831,5 +531,9 @@
         2019 © Magenta Print, Всі права захищені
       </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
   </body>
 </html>
