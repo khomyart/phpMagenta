@@ -12,8 +12,9 @@ error_reporting(E_ALL);*/
 initSession();
 $isIndex = basename($_SERVER['SCRIPT_FILENAME']) == 'control.php';
 $isPrice = basename($_SERVER['SCRIPT_FILENAME']) == 'price.php';
+$isTrueIndex = basename($_SERVER['SCRIPT_FILENAME']) == 'index.php';
 
-if (!$isPrice) {
+if ((!$isPrice) && (!$isTrueIndex)) {
     if (isAuth()) {
         // User is authorized
         if ($isIndex) {
