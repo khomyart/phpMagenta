@@ -34,6 +34,17 @@ if (isset($_GET['MerchTypeEditSave'])) {
     updateUnit('merchType', $params);
 }
 
+if (isset($_GET['MerchTypeCopy'])) {
+    $pastedItemId = copyUnit($_GET['MerchTypeCopy']);
+
+    if ($pastedItemId) {
+        header('Location: merch.php?scrollTo='.$pastedItemId);
+    } else {
+        die ('bla');
+    };
+
+}
+
 /* Performs merch type delete when appropriate button has been pressed */
 if (isset($_GET['MerchTypeDelete'])) {
     $params = [
@@ -46,6 +57,12 @@ if (isset($_GET['MerchTypeDelete'])) {
 $targetFile = $_GET['fileLocation'];
 $imgMerchUnderTypeZIndex = -1;
 $addingImageInputType = '';
+$addingImageLabelDisplay = '';
+
+if ($targetFile) {
+    $addingImageInputType = 'hidden';
+    $addingImageLabelDisplay = 'none';
+}
 
 /* Performs merch under type creating when all fields are filled and appropriate button has been pressed */
 if (isset($_GET['newMerchUnderTypeSave'])) {
@@ -106,7 +123,7 @@ if (isset($_GET['newMerchUnderTypeSave'])) {
         }
 
     insertUnit('size', $availableSizeParams);
-    header('Location: merch.php');
+    header('Location: merch.php?scrollTo='.$lastAddedMerchUnderTypeId['id'] );
 }
 
 /* Performs merch under type edit with proper ID */
@@ -202,9 +219,7 @@ if (isset($_GET['existedMerchUnderTypeSave'])) {
     }
 
     if (performQuery($merchUnderTypeUpdateGeneralInfoQuery, $merchUnderTypeUpdateGeneralInfoParams)) {
-        //header('Location: merch.php');
-    } else {
-        echo 'gg wp suka';
+        header('Location: merch.php?scrollTo='.$_GET['existedMerchUnderTypeSave']);
     }
 
 }
@@ -240,7 +255,7 @@ $availableSizes = getListOfAvailableSizes($searchValue);
 $merchTypesDisplayBlock = false;
 
 /* If user is currently editing merch type, hide another merch types */
-if ($_GET['MerchTypeEdit'] || $_GET['newMerchUnderType']) {
+if ($_GET['MerchTypeEdit'] || $_GET['newMerchUnderType'] || $_GET['MerchUnderTypeEdit']) {
     $merchTypesDisplayBlock = true;
 }
 
@@ -366,7 +381,7 @@ include './templates/header.php'; ?>
                                 <div class="info-container-text-desc d-flex flex-column justify-content-center align-items-center">
                                     <label>Опис</label>
                                     <textarea class=" d-inline-block form-control" name="existedMerchUnderType[desc]"
-                                              style="height: 160px; width: 350px;"><?= $merchUnderTypeEditGeneralInfoAndSizes['description'] ?></textarea>
+                                              style="height: 160px; width: 350px;"><?= str_replace('<br />', '', $merchUnderTypeEditGeneralInfoAndSizes['description']); ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -545,7 +560,7 @@ include './templates/header.php'; ?>
                         <div class="info-container">
                             <div class="info-container-img d-flex flex-column justify-content-center align-items-center">
                                 <img src="<?= $targetFile ?>" style="z-index: <?= $imgMerchUnderTypeZIndex ?>;" alt="">
-                                <label>Посилання на зображення</label>
+                                <label style="display: <?= $addingImageLabelDisplay ?>;" ">Посилання на зображення</label>
                                 <input type="<?= $addingImageInputType ?>" class="form-control" name="newMerchUnderType[img]" style="width: 100%;" value="<?= $targetFile ?>">
                             </div>
                             <div class="info-container-text">
@@ -744,7 +759,7 @@ include './templates/header.php'; ?>
                             <?php
                             foreach ($underPositions as $underPosition) {
                                 if ($underPosition['merch_type_id'] === $position['id']) {?>
-                                    <div class="full-length-back position-relative">
+                                    <div id="<?= $underPosition['id'] ?>" class="full-length-back position-relative">
                                         <div class="dropdown position-absolute"
                                              style="margin-top:-25px; top:40px; right: 15px;">
                                             <button class="btn btn-info dropdown-toggle"
@@ -759,6 +774,10 @@ include './templates/header.php'; ?>
                                                 <button class="dropdown-item" name="MerchUnderTypeEdit"
                                                         value="<?= $underPosition['id'] ?>">
                                                     Редагувати
+                                                </button>
+                                                <button class="dropdown-item" name="MerchTypeCopy"
+                                                        value="<?= $underPosition['id'] ?>">
+                                                    Копіювати
                                                 </button>
                                                 <button class="dropdown-item" name="MerchUnderTypeDelete"
                                                         value="<?= $underPosition['id'] ?>">
@@ -982,6 +1001,15 @@ include './templates/header.php'; ?>
                     }
                 }?>
             </form>
+
+            <script>
+                id = <?= $_GET['scrollTo'] ?>;
+                yOffset = -20;
+                element = document.getElementById(id);
+                y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+                window.scrollTo({top: y, behavior: 'smooth'});
+            </script>
         </div>
     </div>
 </div>

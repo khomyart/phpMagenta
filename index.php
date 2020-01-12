@@ -1,3 +1,7 @@
+<?php
+    include 'imports.php';
+?>
+
 <!DOCTYPE html>
 <html>
     <head lang="en">
@@ -717,87 +721,104 @@
 
             <!--CONTENT-->
             <!--CONTENT-->
-            
-            <div class="content-header">
-                    <h2>ПРОДУКЦІЯ В АСОРТИМЕНТІ</h2>
-            </div>
-            <div class="space-between-lots">
-                <div class="separator">
+            <form action="price.php" method="get">
+                <div class="content-header">
+                        <h2>ПРОДУКЦІЯ В АСОРТИМЕНТІ</h2>
                 </div>
-            </div>
-                <div class="man-woman-container">
-                    <div class="man man-woman-img-container">
-                        <div class="text-background">
-                            <h2 class="white-text-with-shadows">Чоловічий одяг</h2>
-                            <div class="position-text-underline">
-                            </div>
-                        </div>
-                        <img class="man-woman-image" src="/img/BST/man/man.png">
-                        <a href="#">
-                            <div class="man-woman-button">
-                                ...
-                            </div>
-                        </a>
-                    </div>
-                    <div class="woman man-woman-img-container">
-                            <div class="text-background">
-                                <h2 class="white-text-with-shadows">Жіночий одяг</h2>
-                                <div class="position-text-underline">
-                                </div>
-                            </div>
-                        <img class="man-woman-image" src="https://via.placeholder.com/800">
-                        <a href="#">
-                            <div class="man-woman-button">
-                                ...
-                            </div>
-                        </a>
-                    </div>
-                    <div class="child man-woman-img-container">
-                            <div class="text-background">
-                                <h2 class="white-text-with-shadows">Дитячий одяг</h2>
-                                <div class="position-text-underline">
-                                </div>
-                            </div>
-                        <img class="man-woman-image" src="https://via.placeholder.com/800">
-                        <a href="#">
-                            <div class="man-woman-button">
-                                ...
-                            </div>
-                        </a>
-                    </div>        
-                    <div class="bag man-woman-img-container">
-                        <div class="text-background">
-                            <h2 class="white-text-with-shadows">Кружки</h2>
-                            <div class="position-text-underline">
-                            </div>
-                        </div>
-                         <img class="man-woman-image" src="https://via.placeholder.com/800">
-                        <a href="#">
-                            <div class="man-woman-button">
-                                ...
-                            </div>
-                        </a>
-                    </div>            
-                    <div class="hat man-woman-img-container">
-                            <div class="text-background">
-                                <h2 class="white-text-with-shadows">Шапки та кепки</h2>
-                                <div class="position-text-underline">
-                                </div>
-                            </div>
-                        <img class="man-woman-image" src="https://via.placeholder.com/800">
-                        <a href="#">
-                            <div class="man-woman-button">
-                                ...
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <!--
-                <div class="space-between-lots" style="margin-top:-2rem;">
+                <div class="space-between-lots">
                     <div class="separator">
                     </div>
                 </div>
-                -->
+                    <div class="man-woman-container">
+                        <div class="man man-woman-img-container">
+                            <div class="text-background">
+                                <h2 class="white-text-with-shadows">Чоловічий одяг</h2>
+                                <div class="position-text-underline">
+                                </div>
+                            </div>
+                            <img class="man-woman-image" src="/img/BST/man/man.png">
+                            <span>
+                                <div class="man-woman-button">
+                                    <button class="man-woman-button-scroll-pointer" type="submit" name="scrollTo"
+                                            value="Чоловічий одяг">
+                                    ...
+                                    </button>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="woman man-woman-img-container">
+                                <div class="text-background">
+                                    <h2 class="white-text-with-shadows">Жіночий одяг</h2>
+                                    <div class="position-text-underline">
+                                    </div>
+                                </div>
+                            <img class="man-woman-image" src="https://via.placeholder.com/800">
+                            <span>
+                                <div class="man-woman-button">
+                                    <button class="man-woman-button-scroll-pointer" type="submit" name="scrollTo"
+                                            value="Жіночий одяг">
+                                    ...
+                                    </button>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="child man-woman-img-container">
+                                <div class="text-background">
+                                    <h2 class="white-text-with-shadows">Дитячий одяг</h2>
+                                    <div class="position-text-underline">
+                                    </div>
+                                </div>
+                            <img class="man-woman-image" src="https://via.placeholder.com/800">
+                            <span>
+                                <div class="man-woman-button">
+                                    <button class="man-woman-button-scroll-pointer" type="submit" name="scrollTo"
+                                            value="Дитячий одяг">
+                                    ...
+                                    </button>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="bag man-woman-img-container">
+                            <div class="text-background">
+                                <h2 class="white-text-with-shadows">Кружки</h2>
+                                <div class="position-text-underline">
+                                </div>
+                            </div>
+                             <img class="man-woman-image" src="https://via.placeholder.com/800">
+                            <span>
+                                <div class="man-woman-button">
+                                    <button class="man-woman-button-scroll-pointer" type="submit" name="scrollTo"
+                                            value="Кружки">
+                                    ...
+                                    </button>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="hat man-woman-img-container">
+                                <div class="text-background">
+                                    <h2 class="white-text-with-shadows">Шапки та кепки</h2>
+                                    <div class="position-text-underline">
+                                    </div>
+                                </div>
+                            <img class="man-woman-image" src="https://via.placeholder.com/800">
+                            <span>
+                                <div class="man-woman-button">
+                                    <button class="man-woman-button-scroll-pointer" type="submit" name="scrollTo"
+                                            value="Шапки та кепки">
+                                    ...
+                                    </button>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                 </form>
+
+                <?php include './templates/feedback.php'; ?>
+
+                <div class="space-between-lots">
+
+                </div>
+
                 <!--CONTENT-->
                  <div class="footer">
                     <div class="magenta-logo-div">

@@ -122,7 +122,7 @@ $availableSizes = getListOfAvailableSizes($searchValue);
       <!--CONTENT-->
         <?php
         foreach ($positions as $position) {?>
-            <div class="content-header">
+            <div id="<?= $position['merch_type_name'] ?>" class="content-header">
                 <h2>
                     <?= $position['merch_type_name'] ?>
                 </h2>
@@ -347,6 +347,16 @@ $availableSizes = getListOfAvailableSizes($searchValue);
                 }
             }
         }?>
+
+        <script>
+            let id = '<?= $_GET['scrollTo'] ?>';
+            yOffset = -40;
+            element = document.getElementById(id);
+            y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+            window.scrollTo({top: y, behavior: 'smooth'});
+        </script>
+
       <!--CONTENT-->
 
       <div class="footer">
