@@ -6,14 +6,11 @@
  * @param string $filter
  * @return array
  */
-function getListOfMerchTypes($filter = '')
+function getListOfMerchTypes()
 {
     $query = 'SELECT * FROM `merch_types` WHERE 1';
+    $params['filter'] = '% %';
 
-    if (is_string($filter) && (trim($filter) != '')) {
-        $query .= ' AND ( (`first_name` LIKE :filter) OR (`last_name` LIKE :filter) OR (`phone` LIKE :filter) )';
-        $params['filter'] = '%' . $filter . '%';
-    }
 
     return getAllRows($query, $params);
 }
@@ -29,7 +26,9 @@ function getListOfMerchUnderTypes($filter = '')
     $query = 'SELECT * FROM `merch_under_types` WHERE 1';
 
     if (is_string($filter) && (trim($filter) != '')) {
-        $query .= ' AND ( (`first_name` LIKE :filter) OR (`last_name` LIKE :filter) OR (`phone` LIKE :filter) )';
+        $query .= ' AND ( (LOWER(`merch_under_type_name`) LIKE LOWER(:filter)) 
+                            OR (LOWER(`description`) LIKE LOWER(:filter)) 
+                            OR (LOWER(`price`) LIKE LOWER(:filter)) )';
         $params['filter'] = '%' . $filter . '%';
     }
 
@@ -42,16 +41,12 @@ function getListOfMerchUnderTypes($filter = '')
  * @param string $filter
  * @return array
  */
-function getListOfColourPack($filter = '')
+function getListOfColourPack()
 {
     $query = 'SELECT m.merch_under_type_id, m.color_id, a.color, a.article, a.description, a.textColor 
                 FROM `merch_under_types_color` as m 
                 LEFT JOIN `available_colors` as a ON m.color_id = a.id;';
-
-    if (is_string($filter) && (trim($filter) != '')) {
-        $query .= ' AND ( (`first_name` LIKE :filter) OR (`last_name` LIKE :filter) OR (`phone` LIKE :filter) )';
-        $params['filter'] = '%' . $filter . '%';
-    }
+    $params['filter'] = '% %';
 
     return getAllRows($query, $params);
 }
@@ -72,11 +67,7 @@ function getListOfAvailableColors()
 function getListOfAvailableSizes($filter = '')
 {
     $query = 'SELECT * FROM `available_sizes` WHERE 1';
-
-    if (is_string($filter) && (trim($filter) != '')) {
-        $query .= ' AND ( (`first_name` LIKE :filter) OR (`last_name` LIKE :filter) OR (`phone` LIKE :filter) )';
-        $params['filter'] = '%' . $filter . '%';
-    }
+    $params['filter'] = '% %';
 
     $results = getAllRows($query, $params);
 
@@ -127,6 +118,43 @@ function updateUnit($type, $params) {
     }
 
     return performQuery($query, $params) ? true : false;
+}
+
+/**
+ * Copy unit
+ *
+ * @array $currentPositionId (current position ID)
+ */
+function copyUnit($currentPositionId) {
+    $params['currentId'] = $currentPositionId;
+    $query = 'INSERT INTO `merch_under_types` (`merch_type_id`, `merch_under_type_name`, `img`, `description`, `price`) 
+                SELECT `merch_type_id`, `merch_under_type_name`, `img`, `description`, `price`
+                FROM `merch_under_types`
+                WHERE `id` = :currentId;';
+    if (!performQuery($query, $params)) {
+        return false;
+    }
+
+    $lastAddedMerchUnderTypeQuery = 'SELECT `id` FROM `merch_under_types` ORDER BY id DESC LIMIT 1';
+    $lastAddedMerchUnderTypeId = getRow($lastAddedMerchUnderTypeQuery, []);
+
+    $params['lastAddedMerchUnderTypeId'] = $lastAddedMerchUnderTypeId['id'];
+
+    $query='INSERT INTO `merch_under_types_color` (`merch_under_type_id`, `color_id`) 
+                SELECT :lastAddedMerchUnderTypeId, `color_id` 
+                FROM `merch_under_types_color` 
+                WHERE `merch_under_type_id` = :currentId;';
+    if (!performQuery($query, $params)) {
+        return false;
+    }
+
+    $query='INSERT INTO `available_sizes`(`merch_under_type_id`, `S_a`, `S_b`, `S_c`, `M_a`, `M_b`, `M_c`, `L_a`, `L_b`, `L_c`, `XL_a`, `XL_b`, `XL_c`, `XXL_a`, `XXL_b`, `XXL_c`, `3XL_a`, `3XL_b`, `3XL_c`, `4XL_a`, `4XL_b`, `4XL_c`, `5XL_a`, `5XL_b`, `5XL_c`) 
+                SELECT :lastAddedMerchUnderTypeId, `S_a`, `S_b`, `S_c`, `M_a`, `M_b`, `M_c`, `L_a`, `L_b`, `L_c`, `XL_a`, `XL_b`, `XL_c`, `XXL_a`, `XXL_b`, `XXL_c`, `3XL_a`, `3XL_b`, `3XL_c`, `4XL_a`, `4XL_b`, `4XL_c`, `5XL_a`, `5XL_b`, `5XL_c` FROM `available_sizes` WHERE `merch_under_type_id` = :currentId;';
+    if (!performQuery($query, $params)) {
+        return false;
+    }
+
+    return $lastAddedMerchUnderTypeId['id'];
 }
 
 /**
